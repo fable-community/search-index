@@ -16,17 +16,17 @@ pub fn probability(p1: u32, _p2: u32) -> js_sys::Uint8Array {
 
     let t: u32 = 350 / (100 / p1);
 
-    let img = image::RgbImage::from_fn(350, 15, |x, _y| {
+    let img = image::RgbaImage::from_fn(350, 15, |x, _y| {
         if x > t {
-            image::Rgb([163, 163, 163])
+            image::Rgba([163, 163, 163, 255])
         } else {
-            image::Rgb([255, 255, 255])
+            image::Rgba([255, 255, 255, 255])
         }
     });
 
     let mut buf = std::io::Cursor::new(Vec::new());
 
-    img.write_to(&mut buf, image::ImageOutputFormat::Jpeg(80))
+    img.write_to(&mut buf, image::ImageOutputFormat::Png)
         .unwrap();
 
     js_sys::Uint8Array::from(buf.get_ref().clone().as_ref())
