@@ -22,6 +22,5 @@
   "explorer.fileNesting.patterns": {
     "README.md": "LICENSE,.gitignore",
     "Cargo.toml": "Cargo.lock",
-    "deno.json": "deno.lock"
   }
 }

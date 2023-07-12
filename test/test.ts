@@ -8,25 +8,19 @@ import { existsSync } from 'https://deno.land/std@0.188.0/fs/mod.ts';
 
 import { assertEquals } from 'https://deno.land/std@0.188.0/testing/asserts.ts';
 
-import { handler } from '../build/images_proxy.js';
+import { probability } from '../build/dyn_images.js';
 
 const directory = dirname(import.meta.url);
 
-const kiara = 'http://./https://images2.imgbox.com/05/06/ilSpCC45_o.png';
-const fauna = 'http://./https://images2.imgbox.com/76/07/BLiqJb65_o.png';
-const aqua = 'http://./https://images2.imgbox.com/a8/8c/a91bsWKH_o.png';
-
-const guraEmbed = 'http://./https://imgbox.com/mxkxpJOP';
-
 const compare = async (
   snapShotPath: URL,
-  response: Response,
+  image: Uint8Array,
 ): Promise<number> => {
   const existing = decode(await Deno.readFile(snapShotPath));
 
   const diff = pixelmatch(
     existing.data,
-    decode(await response.arrayBuffer()).data,
+    decode(image).data,
     null,
     existing.width,
     existing.height,
@@ -35,104 +29,36 @@ const compare = async (
   return diff;
 };
 
-Deno.test('large portrait', async (test) => {
+Deno.test('win probability 50-50', async (test) => {
   const snapShotPath = new URL(
     join(directory, `__snapshots__/${test.name}.jpeg`),
   );
 
-  const response = await handler(new Request(kiara));
+  const image = probability(50, 50);
 
   if (!existsSync(snapShotPath)) {
     await Deno.writeFile(
       snapShotPath,
-      new Uint8Array(await response.arrayBuffer()),
+      image,
     );
   } else {
-    assertEquals(await compare(snapShotPath, response), 0);
+    assertEquals(await compare(snapShotPath, image), 0);
   }
 });
 
-Deno.test('large portrait 2', async (test) => {
+Deno.test('win probability 10-90', async (test) => {
   const snapShotPath = new URL(
     join(directory, `__snapshots__/${test.name}.jpeg`),
   );
 
-  const response = await handler(new Request(fauna));
+  const image = probability(10, 90);
 
   if (!existsSync(snapShotPath)) {
     await Deno.writeFile(
       snapShotPath,
-      new Uint8Array(await response.arrayBuffer()),
+      image,
     );
   } else {
-    assertEquals(await compare(snapShotPath, response), 0);
-  }
-});
-
-Deno.test('large square', async (test) => {
-  const snapShotPath = new URL(
-    join(directory, `__snapshots__/${test.name}.jpeg`),
-  );
-
-  const response = await handler(new Request(aqua));
-
-  if (!existsSync(snapShotPath)) {
-    await Deno.writeFile(
-      snapShotPath,
-      new Uint8Array(await response.arrayBuffer()),
-    );
-  } else {
-    assertEquals(await compare(snapShotPath, response), 0);
-  }
-});
-
-Deno.test('preview portrait', async (test) => {
-  const snapShotPath = new URL(
-    join(directory, `__snapshots__/${test.name}.jpeg`),
-  );
-
-  const response = await handler(new Request(`${kiara}?size=preview`));
-
-  if (!existsSync(snapShotPath)) {
-    await Deno.writeFile(
-      snapShotPath,
-      new Uint8Array(await response.arrayBuffer()),
-    );
-  } else {
-    assertEquals(await compare(snapShotPath, response), 0);
-  }
-});
-
-Deno.test('preview square', async (test) => {
-  const snapShotPath = new URL(
-    join(directory, `__snapshots__/${test.name}.jpeg`),
-  );
-
-  const response = await handler(new Request(`${aqua}?size=preview`));
-
-  if (!existsSync(snapShotPath)) {
-    await Deno.writeFile(
-      snapShotPath,
-      new Uint8Array(await response.arrayBuffer()),
-    );
-  } else {
-    assertEquals(await compare(snapShotPath, response), 0);
-  }
-});
-
-Deno.test('ogimage', async (test) => {
-  const snapShotPath = new URL(
-    join(directory, `__snapshots__/${test.name}.jpeg`),
-  );
-
-  const response = await handler(new Request(guraEmbed));
-
-  if (!existsSync(snapShotPath)) {
-    await Deno.writeFile(
-      snapShotPath,
-      new Uint8Array(await response.arrayBuffer()),
-    );
-  } else {
-    assertEquals(await compare(snapShotPath, response), 0);
+    assertEquals(await compare(snapShotPath, image), 0);
   }
 });

@@ -1,11 +1,7 @@
-# images-proxy
+# dyn-images
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/fable-community/images-proxy)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/fable-community/dyn-images)
 
-```sh
-deno task build
-deno task start
+```ts
+import * as dyn_images from 'https://raw.githubusercontent.com/fable-community/dyn-images/main/mod.ts'
 ```
-
-This service is used in [Fable](https://github.com/ker0olos/fable) to resize all
-characters and media images
