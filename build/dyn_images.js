@@ -47,12 +47,12 @@ function getStringFromWasm0(ptr, len) {
     return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
 }
 /**
-* @param {number} p1
-* @param {number} _p2
+* @param {number} win
+* @param {number} tie
 * @returns {Uint8Array}
 */
-export function probability(p1, _p2) {
-    const ret = wasm.probability(p1, _p2);
+export function probability(win, tie) {
+    const ret = wasm.probability(win, tie);
     return takeObject(ret);
 }
 

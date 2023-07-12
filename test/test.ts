@@ -29,12 +29,12 @@ const compare = async (
   return diff;
 };
 
-Deno.test('win probability 50-50', async (test) => {
+Deno.test('win 50 - tie 0', async (test) => {
   const snapShotPath = new URL(
-    join(directory, `__snapshots__/${test.name}.jpeg`),
+    join(directory, `__snapshots__/${test.name}.png`),
   );
 
-  const image = probability(50, 50);
+  const image = probability(50, 0);
 
   if (!existsSync(snapShotPath)) {
     await Deno.writeFile(
@@ -46,12 +46,29 @@ Deno.test('win probability 50-50', async (test) => {
   }
 });
 
-Deno.test('win probability 10-90', async (test) => {
+Deno.test('win 50 - tie 30', async (test) => {
   const snapShotPath = new URL(
-    join(directory, `__snapshots__/${test.name}.jpeg`),
+    join(directory, `__snapshots__/${test.name}.png`),
   );
 
-  const image = probability(10, 90);
+  const image = probability(50, 30);
+
+  if (!existsSync(snapShotPath)) {
+    await Deno.writeFile(
+      snapShotPath,
+      image,
+    );
+  } else {
+    assertEquals(await compare(snapShotPath, image), 0);
+  }
+});
+
+Deno.test('win 0 - tie 90', async (test) => {
+  const snapShotPath = new URL(
+    join(directory, `__snapshots__/${test.name}.png`),
+  );
+
+  const image = probability(0, 90);
 
   if (!existsSync(snapShotPath)) {
     await Deno.writeFile(

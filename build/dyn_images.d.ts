@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
-* @param {number} p1
-* @param {number} _p2
+* @param {number} win
+* @param {number} tie
 * @returns {Uint8Array}
 */
-export function probability(p1: number, _p2: number): Uint8Array;
+export function probability(win: number, tie: number): Uint8Array;
