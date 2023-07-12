@@ -48,11 +48,10 @@ function getStringFromWasm0(ptr, len) {
 }
 /**
 * @param {number} win
-* @param {number} tie
 * @returns {Uint8Array}
 */
-export function probability(win, tie) {
-    const ret = wasm.probability(win, tie);
+export function probability(win) {
+    const ret = wasm.probability(win);
     return takeObject(ret);
 }
 
