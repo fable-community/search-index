@@ -18,16 +18,19 @@ const GREY: image::Rgba<u8> = image::Rgba([163, 163, 163, 255]);
 pub fn probability(win: u32) -> js_sys::Uint8Array {
     console_error_panic_hook::set_once();
 
-
     let w: u32 = 350 * u32::max(win, 0) / 100;
 
-    let img = image::RgbaImage::from_fn(350, 15, |x, _| {
-        if (0..w).contains(&x) {
-            WHITE
-        } else {
-            GREY
-        }
-    });
+    let img = image::RgbaImage::from_fn(
+        350,
+        15,
+        |x, _| {
+            if (0..w).contains(&x) {
+                WHITE
+            } else {
+                GREY
+            }
+        },
+    );
 
     let mut buf = std::io::Cursor::new(Vec::new());
 
