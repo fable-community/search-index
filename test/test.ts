@@ -79,3 +79,20 @@ Deno.test('win 90', async (test) => {
     assertEquals(await compare(snapShotPath, image), 0);
   }
 });
+
+Deno.test('win 0', async (test) => {
+  const snapShotPath = new URL(
+    join(directory, `__snapshots__/${test.name}.png`),
+  );
+
+  const image = probability(0);
+
+  if (!existsSync(snapShotPath)) {
+    await Deno.writeFile(
+      snapShotPath,
+      image,
+    );
+  } else {
+    assertEquals(await compare(snapShotPath, image), 0);
+  }
+});
