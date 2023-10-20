@@ -25,7 +25,7 @@ pub fn hp(left: u32, damage: u32) -> js_sys::Uint8Array {
     let img = image::RgbaImage::from_fn(350, 15, |x, _| {
         if (0..w).contains(&x) {
             WHITE
-        } else if (w..w + d).contains(&x) {
+        } else if damage > 0 && (w..w + d + 1).contains(&x) {
             RED
         } else {
             GREY
