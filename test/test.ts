@@ -8,7 +8,7 @@ import { existsSync } from 'https://deno.land/std@0.188.0/fs/mod.ts';
 
 import { assertEquals } from 'https://deno.land/std@0.188.0/testing/asserts.ts';
 
-import { probability } from '../build/dyn_images.js';
+import { hp } from '../build/dyn_images.js';
 
 const directory = dirname(import.meta.url);
 
@@ -29,12 +29,12 @@ const compare = async (
   return diff;
 };
 
-Deno.test('win 50', async (test) => {
+Deno.test('hp 50', async (test) => {
   const snapShotPath = new URL(
     join(directory, `__snapshots__/${test.name}.png`),
   );
 
-  const image = probability(50);
+  const image = hp(50, 0);
 
   if (!existsSync(snapShotPath)) {
     await Deno.writeFile(
@@ -46,12 +46,12 @@ Deno.test('win 50', async (test) => {
   }
 });
 
-Deno.test('win 10', async (test) => {
+Deno.test('hp 10', async (test) => {
   const snapShotPath = new URL(
     join(directory, `__snapshots__/${test.name}.png`),
   );
 
-  const image = probability(10);
+  const image = hp(10, 0);
 
   if (!existsSync(snapShotPath)) {
     await Deno.writeFile(
@@ -63,12 +63,12 @@ Deno.test('win 10', async (test) => {
   }
 });
 
-Deno.test('win 90', async (test) => {
+Deno.test('hp 90', async (test) => {
   const snapShotPath = new URL(
     join(directory, `__snapshots__/${test.name}.png`),
   );
 
-  const image = probability(90);
+  const image = hp(90, 0);
 
   if (!existsSync(snapShotPath)) {
     await Deno.writeFile(
@@ -80,12 +80,46 @@ Deno.test('win 90', async (test) => {
   }
 });
 
-Deno.test('win 0', async (test) => {
+Deno.test('hp 0', async (test) => {
   const snapShotPath = new URL(
     join(directory, `__snapshots__/${test.name}.png`),
   );
 
-  const image = probability(0);
+  const image = hp(0, 0);
+
+  if (!existsSync(snapShotPath)) {
+    await Deno.writeFile(
+      snapShotPath,
+      image,
+    );
+  } else {
+    assertEquals(await compare(snapShotPath, image), 0);
+  }
+});
+
+Deno.test('hp 90 damage 10', async (test) => {
+  const snapShotPath = new URL(
+    join(directory, `__snapshots__/${test.name}.png`),
+  );
+
+  const image = hp(90, 10);
+
+  if (!existsSync(snapShotPath)) {
+    await Deno.writeFile(
+      snapShotPath,
+      image,
+    );
+  } else {
+    assertEquals(await compare(snapShotPath, image), 0);
+  }
+});
+
+Deno.test('hp 50 damage 10', async (test) => {
+  const snapShotPath = new URL(
+    join(directory, `__snapshots__/${test.name}.png`),
+  );
+
+  const image = hp(50, 10);
 
   if (!existsSync(snapShotPath)) {
     await Deno.writeFile(

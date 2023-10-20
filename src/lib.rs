@@ -12,25 +12,25 @@ use wasm_bindgen::prelude::*;
 
 const WHITE: image::Rgba<u8> = image::Rgba([255, 255, 255, 255]);
 const GREY: image::Rgba<u8> = image::Rgba([163, 163, 163, 255]);
+const RED: image::Rgba<u8> = image::Rgba([222, 38, 38, 255]);
 // const BLANK: image::Rgba<u8> = image::Rgba([0, 0, 0, 0]);
 
 #[wasm_bindgen]
-pub fn probability(win: u32) -> js_sys::Uint8Array {
+pub fn hp(left: u32, damage: u32) -> js_sys::Uint8Array {
     console_error_panic_hook::set_once();
 
-    let w: u32 = 350 * u32::max(win, 0) / 100;
+    let w: u32 = 350 * u32::max(left, 0) / 100;
+    let d: u32 = 350 * u32::max(damage, 0) / 100;
 
-    let img = image::RgbaImage::from_fn(
-        350,
-        15,
-        |x, _| {
-            if (0..w).contains(&x) {
-                WHITE
-            } else {
-                GREY
-            }
-        },
-    );
+    let img = image::RgbaImage::from_fn(350, 15, |x, _| {
+        if (0..w).contains(&x) {
+            WHITE
+        } else if (w..w + d).contains(&x) {
+            RED
+        } else {
+            GREY
+        }
+    });
 
     let mut buf = std::io::Cursor::new(Vec::new());
 

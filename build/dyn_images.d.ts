@@ -1,7 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
-* @param {number} win
+* @param {number} left
+* @param {number} damage
 * @returns {Uint8Array}
 */
-export function probability(win: number): Uint8Array;
+export function hp(left: number, damage: number): Uint8Array;
