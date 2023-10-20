@@ -114,7 +114,6 @@ Deno.test('hp 90 damage 10', async (test) => {
   }
 });
 
-
 Deno.test('hp 83 damage 17', async (test) => {
   const snapShotPath = new URL(
     join(directory, `__snapshots__/${test.name}.png`),
@@ -131,7 +130,6 @@ Deno.test('hp 83 damage 17', async (test) => {
     assertEquals(await compare(snapShotPath, image), 0);
   }
 });
-
 
 Deno.test('hp 50 damage 10', async (test) => {
   const snapShotPath = new URL(
