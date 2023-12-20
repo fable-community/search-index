@@ -16,7 +16,6 @@
   "explorer.fileNesting.expand": false,
   "files.exclude": {
     ".git": true,
-    "build": true,
     "target": true,
   },
   "explorer.fileNesting.patterns": {
