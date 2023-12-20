@@ -13,6 +13,7 @@ crate-type = ["cdylib"]
 wasm-bindgen = "0.2.86"
 console_error_panic_hook = "0.1.6"
 js-sys = "0.3.63"
+levenshtein = "1.0.5"
 
 [profile.release]
 lto = true

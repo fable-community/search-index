@@ -79,13 +79,13 @@ function passStringToWasm0(arg, malloc, realloc) {
 * @param {string} b
 * @returns {number}
 */
-export function search(a, b) {
+export function levenshtein(a, b) {
     const ptr0 = passStringToWasm0(a, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
     const len0 = WASM_VECTOR_LEN;
     const ptr1 = passStringToWasm0(b, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
     const len1 = WASM_VECTOR_LEN;
-    const ret = wasm.search(ptr0, len0, ptr1, len1);
-    return ret;
+    const ret = wasm.levenshtein(ptr0, len0, ptr1, len1);
+    return ret >>> 0;
 }
 
 const cachedTextDecoder = (typeof TextDecoder !== 'undefined' ? new TextDecoder('utf-8', { ignoreBOM: true, fatal: true }) : { decode: () => { throw Error('TextDecoder not available') } } );

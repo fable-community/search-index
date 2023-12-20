@@ -5,4 +5,4 @@
 * @param {string} b
 * @returns {number}
 */
-export function search(a: string, b: string): number;
+export function levenshtein(a: string, b: string): number;
