@@ -10,7 +10,7 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
-      - run: deno fmt --config deno.json --check
+      - run: deno fmt --check
 
   lint:
     runs-on: ubuntu-latest
@@ -19,8 +19,7 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
-      - run: deno lint --config deno.json
-  
+      - run: deno lint
   test:
     runs-on: ubuntu-latest
     steps:
@@ -28,4 +27,4 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
-      - run: deno test --config deno.json --allow-all
+      - run: deno test -A

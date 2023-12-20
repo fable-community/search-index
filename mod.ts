@@ -1,1 +1,1 @@
-export * from './build/dyn_images.js';
+export * from './build/search_index.js';
