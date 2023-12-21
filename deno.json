@@ -7,11 +7,11 @@
     "useTabs": false,
     "singleQuote": true,
     "indentWidth": 2,
-    "include": ["src","test"]
+    "include": ["src", "test"]
   },
   "lock": false,
   "lint": {
-    "include": ["src","test"],
+    "include": ["src", "test"],
     "rules": {
       "tags": ["recommended"],
       "include": [

@@ -11,8 +11,7 @@ use wasm_bindgen::prelude::*;
 // }
 
 #[wasm_bindgen]
-pub fn levenshtein(a: String, b: String) -> usize {
+pub fn levenshtein(a: String, b: String) -> u32 {
     console_error_panic_hook::set_once();
-
-    levenshtein::levenshtein(&a, &b)
+    triple_accel::levenshtein(&a.into_bytes(), &b.into_bytes())
 }
