@@ -1,0 +1,83 @@
+{
+  "index_settings": {
+    "docstore_compression": "lz4",
+    "docstore_blocksize": 16384
+  },
+  "segments": [
+    {
+      "segment_id": "f2bff3bf-3a46-4e78-b194-b77035368fdf",
+      "max_doc": 27201,
+      "deletes": null
+    },
+    {
+      "segment_id": "2e08e118-e1d4-405e-b758-35226c343b07",
+      "max_doc": 26752,
+      "deletes": null
+    },
+    {
+      "segment_id": "330c75b4-b290-4824-a5d2-33ecaeb1e862",
+      "max_doc": 26680,
+      "deletes": null
+    },
+    {
+      "segment_id": "085ced1e-10b4-4ba9-bff9-7fc447296dfe",
+      "max_doc": 21649,
+      "deletes": null
+    },
+    {
+      "segment_id": "e63e0c29-8c32-4c9d-acbe-b82233f5672d",
+      "max_doc": 21370,
+      "deletes": null
+    },
+    {
+      "segment_id": "35ad0aa5-b552-4d9b-939a-f451d77e60ea",
+      "max_doc": 14808,
+      "deletes": null
+    }
+  ],
+  "schema": [
+    {
+      "name": "name",
+      "type": "text",
+      "options": {
+        "indexing": {
+          "record": "position",
+          "fieldnorms": true,
+          "tokenizer": "default"
+        },
+        "stored": true,
+        "fast": false
+      }
+    },
+    {
+      "name": "media_title",
+      "type": "text",
+      "options": {
+        "indexing": {
+          "record": "position",
+          "fieldnorms": true,
+          "tokenizer": "default"
+        },
+        "stored": true,
+        "fast": false
+      }
+    },
+    {
+      "name": "id",
+      "type": "text",
+      "options": {
+        "stored": true,
+        "fast": false
+      }
+    },
+    {
+      "name": "popularity",
+      "type": "text",
+      "options": {
+        "stored": true,
+        "fast": false
+      }
+    }
+  ],
+  "opstamp": 138466
+}
