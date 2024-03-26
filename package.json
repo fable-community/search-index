@@ -1,0 +1,16 @@
+{
+  "name": "@fable-community/search-index",
+  "version": "0.1.1",
+  "description": "Used in Fable to speed up fuzzy searching",
+  "main": "build/search-index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fable-community/search-index.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fable-community/search-index/issues"
+  },
+  "homepage": "https://github.com/fable-community/search-index#readme"
+}
