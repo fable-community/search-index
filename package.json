@@ -1,0 +1,17 @@
+{
+  "name": "@fable-community/search-index",
+  "version": "0.1.1",
+  "description": "Used in Fable to create dynamic images on the fly",
+  "main": "build/search_index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fable-community/search-index.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "types": "./build/search_index.d.ts",
+  "bugs": {
+    "url": "https://github.com/fable-community/search-index/issues"
+  },
+  "homepage": "https://github.com/fable-community/search-index#readme"
+}
