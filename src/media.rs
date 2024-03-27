@@ -1,8 +1,6 @@
 use wasm_bindgen::prelude::*;
 
-use crate::{
-    console_log, {tokenizer, Index, Insert},
-};
+use crate::{console_log, searchable, tokenizer, Index, Insert};
 
 #[derive(
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, serde::Serialize, serde::Deserialize, Clone,
@@ -13,25 +11,7 @@ struct Media {
     popularity: u32,
 }
 
-impl Insert<Media> for Index<Media> {
-    fn insert(&mut self, item: Media) -> () {
-        let i = self.data.len();
-
-        let mut combined = Vec::new();
-
-        combined.extend(&item.title);
-
-        for s in &combined {
-            let terms = tokenizer((*s).clone());
-
-            for term in terms {
-                self.refs.entry(term).or_insert_with(Vec::new).push(i);
-            }
-        }
-
-        self.data.push(item);
-    }
-}
+searchable!(Media, title);
 
 #[wasm_bindgen]
 pub fn create_media_index(media_json: &str) -> Result<Vec<u8>, JsError> {

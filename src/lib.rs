@@ -44,3 +44,28 @@ impl<T> Index<T> {
         }
     }
 }
+
+#[macro_export]
+macro_rules! searchable {
+    ($type:ty, $($field:ident),*) => {
+        impl Insert<$type> for Index<$type> {
+            fn insert(&mut self, item: $type) -> () {
+                let i = self.data.len();
+
+                let mut combined = Vec::new();
+
+                $(combined.extend(&item.$field);)*
+
+                for s in &combined {
+                    let terms = tokenizer((*s).clone());
+
+                    for term in terms {
+                        self.refs.entry(term).or_insert_with(Vec::new).push(i);
+                    }
+                }
+
+                self.data.push(item);
+            }
+        }
+    };
+}

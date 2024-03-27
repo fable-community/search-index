@@ -1,8 +1,6 @@
 use wasm_bindgen::prelude::*;
 
-use crate::{
-    console_log, {tokenizer, Index, Insert},
-};
+use crate::{console_log, searchable, tokenizer, Index, Insert};
 
 #[derive(
     rkyv::Archive,
@@ -33,26 +31,7 @@ struct Character {
     role: CharacterRole,
 }
 
-impl Insert<Character> for Index<Character> {
-    fn insert(&mut self, item: Character) -> () {
-        let i = self.data.len();
-
-        let mut combined = Vec::new();
-
-        combined.extend(&item.name);
-        combined.extend(&item.media_title);
-
-        for s in &combined {
-            let terms = tokenizer((*s).clone());
-
-            for term in terms {
-                self.refs.entry(term).or_insert_with(Vec::new).push(i);
-            }
-        }
-
-        self.data.push(item);
-    }
-}
+searchable!(Character, name, media_title);
 
 #[wasm_bindgen]
 pub fn create_characters_index(characters_json: &str) -> Result<Vec<u8>, JsError> {
