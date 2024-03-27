@@ -1,6 +1,6 @@
 import {
-  create_characters_index,
-  create_media_index,
+  // create_characters_index,
+  // create_media_index,
   search_characters,
 } from './build/search_index.js';
 
@@ -22,7 +22,7 @@ import {
 
 console.time('searching index');
 const charactersIndex = await Deno.readFile('./characters_index.bin');
-search_characters('luka', charactersIndex);
+console.log(search_characters('luke', charactersIndex).map((t) => t.name));
 console.timeEnd('searching index');
 
 // deno-lint-ignore prefer-ascii

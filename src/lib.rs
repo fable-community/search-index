@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::*;
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
 
 mod characters;
 mod media;
@@ -16,7 +16,7 @@ macro_rules! console_log {
     ($($t:tt)*) => (crate::log(&format_args!($($t)*).to_string()))
 }
 
-fn normalize_text(text: &str) -> String {
+pub(crate) fn normalize_text(text: &str) -> String {
     unidecode::unidecode(&text.to_lowercase())
 }
 
@@ -28,7 +28,7 @@ pub(crate) fn tokenizer(text: String) -> Vec<String> {
 
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)]
 pub(crate) struct Index<T> {
-    pub(crate) refs: BTreeMap<String, Vec<usize>>,
+    pub(crate) refs: BTreeMap<String, HashSet<u32>>,
     pub(crate) data: Vec<T>,
 }
 
@@ -60,12 +60,35 @@ macro_rules! searchable {
                     let terms = tokenizer((*s).clone());
 
                     for term in terms {
-                        self.refs.entry(term).or_insert_with(Vec::new).push(i);
+                        self.refs
+                            .entry(term)
+                            .or_insert_with(HashSet::new)
+                            .insert(i as u32);
                     }
                 }
 
                 self.data.push(item);
             }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! create_index_fn {
+    ($type:ty, $fn_name:ident) => {
+        #[wasm_bindgen]
+        pub fn $fn_name(json: &str) -> Result<Vec<u8>, JsError> {
+            let mut index = Index::<$type>::default();
+
+            let items: Vec<$type> = serde_json::from_str(json)?;
+
+            for item in &items {
+                index.insert(item.clone());
+            }
+
+            let buf = rkyv::to_bytes::<_, 8192>(&index)?;
+
+            Ok(buf.to_vec())
         }
     };
 }

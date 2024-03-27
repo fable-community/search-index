@@ -1,53 +1,41 @@
+use crate::{create_index_fn, searchable, tokenizer, Index, Insert};
+use std::collections::HashSet;
 use wasm_bindgen::prelude::*;
 
-use crate::{console_log, searchable, tokenizer, Index, Insert};
-
+#[wasm_bindgen(getter_with_clone)]
 #[derive(
     rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, serde::Serialize, serde::Deserialize, Clone,
 )]
 struct Media {
-    id: String,
-    title: Vec<String>,
-    popularity: u32,
+    pub id: String,
+    pub title: Vec<String>,
+    pub popularity: u32,
 }
 
 searchable!(Media, title);
 
-#[wasm_bindgen]
-pub fn create_media_index(media_json: &str) -> Result<Vec<u8>, JsError> {
-    let mut index = Index::<Media>::default();
+create_index_fn!(Media, create_media_index);
 
-    let media: Vec<Media> = serde_json::from_str(media_json)?;
+// #[wasm_bindgen]
+// pub fn search_media(query: &str, index_file: &[u8]) -> Result<Vec<Media>,, JsError> {
+//     let index = unsafe { rkyv::archived_root::<Index<Media>>(index_file) };
 
-    for m in &media {
-        index.insert(m.clone());
-    }
+//     let lev_automaton_builder = levenshtein_automata::LevenshteinAutomatonBuilder::new(1, true);
 
-    let buf = rkyv::to_bytes::<_, 4096>(&index)?;
+//     let dfa = lev_automaton_builder.build_dfa(query);
 
-    Ok(buf.to_vec())
-}
+//     for key in index.refs.keys() {
+//         let mut state = dfa.initial_state();
 
-#[wasm_bindgen]
-pub fn search_media(query: &str, index_file: &[u8]) -> Result<(), JsError> {
-    let index = unsafe { rkyv::archived_root::<Index<Media>>(index_file) };
+//         for &b in key.as_bytes() {
+//             state = dfa.transition(state, b);
+//         }
 
-    let lev_automaton_builder = levenshtein_automata::LevenshteinAutomatonBuilder::new(1, true);
+//         match dfa.distance(state) {
+//             levenshtein_automata::Distance::Exact(_) => console_log!("{:?}", key),
+//             levenshtein_automata::Distance::AtLeast(_) => (),
+//         }
+//     }
 
-    let dfa = lev_automaton_builder.build_dfa(query);
-
-    for key in index.refs.keys() {
-        let mut state = dfa.initial_state();
-
-        for &b in key.as_bytes() {
-            state = dfa.transition(state, b);
-        }
-
-        match dfa.distance(state) {
-            levenshtein_automata::Distance::Exact(_) => console_log!("{:?}", key),
-            levenshtein_automata::Distance::AtLeast(_) => (),
-        }
-    }
-
-    Ok(())
-}
+//     Ok(())
+// }
