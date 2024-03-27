@@ -1,15 +1,22 @@
 {
   "name": "@fable-community/search-index",
-  "version": "0.1.1",
-  "description": "Used in Fable to create dynamic images on the fly",
+  "version": "0.2.0",
+  "description": "Used in Fable for fast fuzzy searching",
   "main": "build/search_index.js",
+  "files": [
+    "build/search_index.js",
+    "build/search_index.d.ts",
+    "build/search_index_bg.wasm",
+    "README.md",
+    "LICENSE"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fable-community/search-index.git"
   },
+  "types": "build/search_index.d.ts",
   "author": "",
   "license": "MIT",
-  "types": "./build/search_index.d.ts",
   "bugs": {
     "url": "https://github.com/fable-community/search-index/issues"
   },

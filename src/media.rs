@@ -1,7 +1,4 @@
-use serde_json::from_str;
 use std::collections::BTreeMap;
-use std::fs;
-use std::path::Path;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -59,13 +56,11 @@ fn tokenizer(text: String) -> Vec<String> {
     words.collect::<Vec<String>>()
 }
 
-pub fn create_index() -> anyhow::Result<()> {
-    let index_path = Path::new("media_index");
-
-    let json = include_str!("media_cache.json");
-    let media: Vec<Media> = from_str(json)?;
-
+#[wasm_bindgen]
+pub fn create_media_index(media_json: &str) -> Result<Vec<u8>, JsError> {
     let mut index = Index::default();
+
+    let media: Vec<Media> = serde_json::from_str(media_json)?;
 
     for m in &media {
         index.insert(m.clone());
@@ -73,15 +68,12 @@ pub fn create_index() -> anyhow::Result<()> {
 
     let buf = rkyv::to_bytes::<_, 4096>(&index)?;
 
-    fs::write(index_path, buf)?;
-
-    Ok(())
+    Ok(buf.to_vec())
 }
 
-pub fn search(query: &str) -> anyhow::Result<()> {
-    let buf = include_bytes!("../media_index");
-
-    let index = unsafe { rkyv::archived_root::<Index>(buf) };
+#[wasm_bindgen]
+pub fn search_media(query: &str, index_file: &[u8]) -> Result<(), JsError> {
+    let index = unsafe { rkyv::archived_root::<Index>(index_file) };
 
     let lev_automaton_builder = levenshtein_automata::LevenshteinAutomatonBuilder::new(1, true);
 
