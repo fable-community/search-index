@@ -27,3 +27,5 @@ console.timeEnd('searching index');
 
 // deno-lint-ignore prefer-ascii
 // search_characters('げんまい茶', charactersIndex);
+
+export * from './build/search_index.js';

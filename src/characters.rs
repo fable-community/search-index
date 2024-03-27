@@ -1,15 +1,8 @@
-use std::collections::BTreeMap;
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen]
-extern "C" {
-    #[wasm_bindgen(js_namespace = console)]
-    fn log(s: &str);
-}
-
-macro_rules! console_log {
-    ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
-}
+use crate::{
+    console_log, {tokenizer, Index, Insert},
+};
 
 #[derive(
     rkyv::Archive,
@@ -40,13 +33,7 @@ struct Character {
     role: CharacterRole,
 }
 
-#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Default)]
-struct Index {
-    refs: BTreeMap<String, Vec<usize>>,
-    data: Vec<Character>,
-}
-
-impl Index {
+impl Insert<Character> for Index<Character> {
     fn insert(&mut self, item: Character) -> () {
         let i = self.data.len();
 
@@ -67,19 +54,9 @@ impl Index {
     }
 }
 
-fn normalize_text(text: &str) -> String {
-    unidecode::unidecode(&text.to_lowercase())
-}
-
-fn tokenizer(text: String) -> Vec<String> {
-    let words = text.split_whitespace().map(normalize_text);
-
-    words.collect::<Vec<String>>()
-}
-
 #[wasm_bindgen]
 pub fn create_characters_index(characters_json: &str) -> Result<Vec<u8>, JsError> {
-    let mut index = Index::default();
+    let mut index = Index::<Character>::default();
 
     let characters: Vec<Character> = serde_json::from_str(characters_json)?;
 
@@ -94,7 +71,7 @@ pub fn create_characters_index(characters_json: &str) -> Result<Vec<u8>, JsError
 
 #[wasm_bindgen]
 pub fn search_characters(query: &str, index_file: &[u8]) -> Result<(), JsError> {
-    let index = unsafe { rkyv::archived_root::<Index>(index_file) };
+    let index = unsafe { rkyv::archived_root::<Index<Character>>(index_file) };
 
     let lev_automaton_builder = levenshtein_automata::LevenshteinAutomatonBuilder::new(1, true);
 
