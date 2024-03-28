@@ -98,3 +98,55 @@ where
 
     Ok(buf.to_vec())
 }
+
+// pub fn search<T>(query: &str, index_file: &[u8]) -> Result<Vec<T>, JsError>
+// where
+//     T: rkyv::Archive,
+// {
+//     let tokens = tokenizer(query.to_string());
+
+//     let index = unsafe { rkyv::archived_root::<Index<T>>(index_file) };
+
+//     let lev_automaton_builder = levenshtein_automata::LevenshteinAutomatonBuilder::new(2, true);
+
+//     let mut results = HashSet::<u32>::new();
+
+//     for token in tokens {
+//         let dfa = lev_automaton_builder.build_dfa(&token);
+
+//         for key in index.refs.keys() {
+//             let mut state = dfa.initial_state();
+
+//             for &b in key.as_bytes() {
+//                 state = dfa.transition(state, b);
+//             }
+
+//             if let levenshtein_automata::Distance::Exact(_) = dfa.distance(state) {
+//                 if let Some(refs) = index.refs.get(key) {
+//                     results.extend(refs.iter());
+//                 }
+//             }
+//         }
+//     }
+
+//     let mut t: Vec<&Archived<T>> = results
+//         .iter()
+//         .filter_map(|i| {
+//             let archived = index.data.get(*i as usize);
+//             archived
+//         })
+//         .collect();
+
+//     // t.sort_by(|a, b| a.popularity.cmp(&b.popularity));
+
+//     let tt: Vec<T> = t
+//         .into_iter()
+//         .take(25)
+//         .filter_map(|archived| {
+//             let character: Option<T> = archived.deserialize(&mut Infallible).ok();
+//             character
+//         })
+//         .collect();
+
+//     Ok(tt)
+// }

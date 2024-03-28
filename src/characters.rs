@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::{create, normalize_text, tokenizer, Fields, Index};
+use crate::{create, tokenizer, Fields, Index};
 
 use rkyv::{Deserialize, Infallible};
 
@@ -27,14 +27,6 @@ pub struct Character {
     pub role: CharacterRole,
 }
 
-#[wasm_bindgen]
-#[derive(Clone)]
-pub struct CharacterResult {
-    pub score: u32,
-    #[wasm_bindgen(getter_with_clone)]
-    pub character: Character,
-}
-
 impl Fields for Character {
     fn fields(&self) -> Vec<String> {
         [self.name.clone(), self.media_title.clone()].concat()
@@ -48,12 +40,12 @@ pub fn create_characters_index(json: &str) -> Result<Vec<u8>, JsError> {
 }
 
 #[wasm_bindgen]
-pub fn search_characters(query: &str, index_file: &[u8]) -> Result<Vec<CharacterResult>, JsError> {
+pub fn search_characters(query: &str, index_file: &[u8]) -> Result<Vec<Character>, JsError> {
     let tokens = tokenizer(query.to_string());
 
     let index = unsafe { rkyv::archived_root::<Index<Character>>(index_file) };
 
-    let lev_automaton_builder = levenshtein_automata::LevenshteinAutomatonBuilder::new(2, true);
+    let lev_automaton_builder = levenshtein_automata::LevenshteinAutomatonBuilder::new(1, true);
 
     let mut results = HashSet::<u32>::new();
 
@@ -75,32 +67,24 @@ pub fn search_characters(query: &str, index_file: &[u8]) -> Result<Vec<Character
         }
     }
 
-    let normalized_query = normalize_text(query).into_bytes();
-
-    let mut t: Vec<CharacterResult> = results
+    let mut t: Vec<&ArchivedCharacter> = results
         .iter()
         .filter_map(|i| {
-            let archived = index.data.get(*i as usize)?;
-            let character: Character = archived.deserialize(&mut Infallible).ok()?;
-
-            let score = character
-                .fields()
-                .iter()
-                .map(|s| {
-                    let normalized = normalize_text(s);
-                    triple_accel::levenshtein(normalized.as_bytes(), &normalized_query)
-                })
-                .min()?;
-
-            Some(CharacterResult { score, character })
+            let archived = index.data.get(*i as usize);
+            archived
         })
         .collect();
 
-    t.sort_by(|a, b| a.score.cmp(&b.score));
+    t.sort_by(|a, b| b.popularity.cmp(&a.popularity));
 
-    let mut tt: Vec<CharacterResult> = t.into_iter().take(25).collect();
-
-    tt.sort_by(|a, b| b.character.popularity.cmp(&a.character.popularity));
+    let tt: Vec<Character> = t
+        .into_iter()
+        .take(25)
+        .filter_map(|archived| {
+            let character: Option<Character> = archived.deserialize(&mut Infallible).ok();
+            character
+        })
+        .collect();
 
     Ok(tt)
 }

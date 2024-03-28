@@ -8,9 +8,9 @@ export function create_characters_index(json: string): Uint8Array;
 /**
 * @param {string} query
 * @param {Uint8Array} index_file
-* @returns {(CharacterResult)[]}
+* @returns {(Character)[]}
 */
-export function search_characters(query: string, index_file: Uint8Array): (CharacterResult)[];
+export function search_characters(query: string, index_file: Uint8Array): (Character)[];
 /**
 * @param {string} json
 * @returns {Uint8Array}
@@ -19,9 +19,9 @@ export function create_media_index(json: string): Uint8Array;
 /**
 * @param {string} query
 * @param {Uint8Array} index_file
-* @returns {(MediaResult)[]}
+* @returns {(Media)[]}
 */
-export function search_media(query: string, index_file: Uint8Array): (MediaResult)[];
+export function search_media(query: string, index_file: Uint8Array): (Media)[];
 /**
 */
 export enum CharacterRole {
@@ -51,17 +51,6 @@ export class Character {
 /**
 */
   role: CharacterRole;
-}
-/**
-*/
-export class CharacterResult {
-  free(): void;
-/**
-*/
-  character: Character;
-/**
-*/
-  score: number;
 }
 /**
 */

@@ -137,13 +137,6 @@ function passArrayJsValueToWasm0(array, malloc) {
     return ptr;
 }
 
-function _assertClass(instance, klass) {
-    if (!(instance instanceof klass)) {
-        throw new Error(`expected instance of ${klass.name}`);
-    }
-    return instance.ptr;
-}
-
 function getArrayU8FromWasm0(ptr, len) {
     ptr = ptr >>> 0;
     return getUint8Memory0().subarray(ptr / 1, ptr / 1 + len);
@@ -182,7 +175,7 @@ function passArray8ToWasm0(arg, malloc) {
 /**
 * @param {string} query
 * @param {Uint8Array} index_file
-* @returns {(CharacterResult)[]}
+* @returns {(Character)[]}
 */
 export function search_characters(query, index_file) {
     try {
@@ -207,6 +200,12 @@ export function search_characters(query, index_file) {
     }
 }
 
+function _assertClass(instance, klass) {
+    if (!(instance instanceof klass)) {
+        throw new Error(`expected instance of ${klass.name}`);
+    }
+    return instance.ptr;
+}
 /**
 * @param {string} json
 * @returns {Uint8Array}
@@ -235,7 +234,7 @@ export function create_media_index(json) {
 /**
 * @param {string} query
 * @param {Uint8Array} index_file
-* @returns {(MediaResult)[]}
+* @returns {(Media)[]}
 */
 export function search_media(query, index_file) {
     try {
@@ -406,62 +405,6 @@ export class Character {
     }
 }
 
-const CharacterResultFinalization = (typeof FinalizationRegistry === 'undefined')
-    ? { register: () => {}, unregister: () => {} }
-    : new FinalizationRegistry(ptr => wasm.__wbg_characterresult_free(ptr >>> 0));
-/**
-*/
-export class CharacterResult {
-
-    static __wrap(ptr) {
-        ptr = ptr >>> 0;
-        const obj = Object.create(CharacterResult.prototype);
-        obj.__wbg_ptr = ptr;
-        CharacterResultFinalization.register(obj, obj.__wbg_ptr, obj);
-        return obj;
-    }
-
-    __destroy_into_raw() {
-        const ptr = this.__wbg_ptr;
-        this.__wbg_ptr = 0;
-        CharacterResultFinalization.unregister(this);
-        return ptr;
-    }
-
-    free() {
-        const ptr = this.__destroy_into_raw();
-        wasm.__wbg_characterresult_free(ptr);
-    }
-    /**
-    * @returns {number}
-    */
-    get score() {
-        const ret = wasm.__wbg_get_characterresult_score(this.__wbg_ptr);
-        return ret >>> 0;
-    }
-    /**
-    * @param {number} arg0
-    */
-    set score(arg0) {
-        wasm.__wbg_set_characterresult_score(this.__wbg_ptr, arg0);
-    }
-    /**
-    * @returns {Character}
-    */
-    get character() {
-        const ret = wasm.__wbg_get_characterresult_character(this.__wbg_ptr);
-        return Character.__wrap(ret);
-    }
-    /**
-    * @param {Character} arg0
-    */
-    set character(arg0) {
-        _assertClass(arg0, Character);
-        var ptr0 = arg0.__destroy_into_raw();
-        wasm.__wbg_set_characterresult_character(this.__wbg_ptr, ptr0);
-    }
-}
-
 const MediaFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_media_free(ptr >>> 0));
@@ -561,14 +504,6 @@ const MediaResultFinalization = (typeof FinalizationRegistry === 'undefined')
 */
 export class MediaResult {
 
-    static __wrap(ptr) {
-        ptr = ptr >>> 0;
-        const obj = Object.create(MediaResult.prototype);
-        obj.__wbg_ptr = ptr;
-        MediaResultFinalization.register(obj, obj.__wbg_ptr, obj);
-        return obj;
-    }
-
     __destroy_into_raw() {
         const ptr = this.__wbg_ptr;
         this.__wbg_ptr = 0;
@@ -616,12 +551,12 @@ const imports = {
             const ret = new Error(getStringFromWasm0(arg0, arg1));
             return addHeapObject(ret);
         },
-        __wbg_characterresult_new: function(arg0) {
-            const ret = CharacterResult.__wrap(arg0);
+        __wbg_character_new: function(arg0) {
+            const ret = Character.__wrap(arg0);
             return addHeapObject(ret);
         },
-        __wbg_mediaresult_new: function(arg0) {
-            const ret = MediaResult.__wrap(arg0);
+        __wbg_media_new: function(arg0) {
+            const ret = Media.__wrap(arg0);
             return addHeapObject(ret);
         },
         __wbindgen_throw: function(arg0, arg1) {

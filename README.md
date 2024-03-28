@@ -1,4 +1,4 @@
-# dyn-images
+# search-index
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/fable-community/search-index)
 

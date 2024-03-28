@@ -4,12 +4,11 @@ import * as search from "./build/search_index.js";
 console.time('search');
 
 const charactersIndex = await Deno.readFile('./characters_index.bin');
-const results = search.search_characters('luke', charactersIndex)
+const results = search.search_characters('megumin', charactersIndex)
 .map((t) => ({
-  name: t.character.name,
-  mediaTitle: t.character.mediaTitle,
-  popularity: t.character.popularity,
-  score: t.score
+  name: t.name,
+  mediaTitle: t.mediaTitle,
+  popularity: t.popularity,
 }));
 console.log(results.slice(0, 3));
 
@@ -18,9 +17,8 @@ console.log(results.slice(0, 3));
 // const mediaIndex = await Deno.readFile('./media_index.bin');
 // const results = search.search_media('Konosuba', mediaIndex)
 // .map((t) => ({
-//   name: t.media.title,
-//   popularity: t.media.popularity,
-//   score: t.score
+//   name: t.title,
+//   popularity: t.popularity,
 // }));
 // console.log(results.slice(0, 3));
 

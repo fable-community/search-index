@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::{create, normalize_text, tokenizer, Fields, Index};
+use crate::{create, tokenizer, Fields, Index};
 
 use rkyv::{Deserialize, Infallible};
 use wasm_bindgen::prelude::*;
@@ -34,12 +34,12 @@ pub fn create_media_index(json: &str) -> Result<Vec<u8>, JsError> {
 }
 
 #[wasm_bindgen]
-pub fn search_media(query: &str, index_file: &[u8]) -> Result<Vec<MediaResult>, JsError> {
+pub fn search_media(query: &str, index_file: &[u8]) -> Result<Vec<Media>, JsError> {
     let tokens = tokenizer(query.to_string());
 
     let index = unsafe { rkyv::archived_root::<Index<Media>>(index_file) };
 
-    let lev_automaton_builder = levenshtein_automata::LevenshteinAutomatonBuilder::new(2, true);
+    let lev_automaton_builder = levenshtein_automata::LevenshteinAutomatonBuilder::new(1, true);
 
     let mut results = HashSet::<u32>::new();
 
@@ -61,32 +61,24 @@ pub fn search_media(query: &str, index_file: &[u8]) -> Result<Vec<MediaResult>, 
         }
     }
 
-    let normalized_query = normalize_text(query).into_bytes();
-
-    let mut t: Vec<MediaResult> = results
+    let mut t: Vec<&ArchivedMedia> = results
         .iter()
         .filter_map(|i| {
-            let archived = index.data.get(*i as usize)?;
-            let media: Media = archived.deserialize(&mut Infallible).ok()?;
-
-            let score = media
-                .fields()
-                .iter()
-                .map(|s| {
-                    let normalized = normalize_text(s);
-                    triple_accel::levenshtein(normalized.as_bytes(), &normalized_query)
-                })
-                .min()?;
-
-            Some(MediaResult { score, media })
+            let archived = index.data.get(*i as usize);
+            archived
         })
         .collect();
 
-    t.sort_by(|a, b| a.score.cmp(&b.score));
+    t.sort_by(|a, b| b.popularity.cmp(&a.popularity));
 
-    let mut tt: Vec<MediaResult> = t.into_iter().take(25).collect();
-
-    tt.sort_by(|a, b| b.media.popularity.cmp(&a.media.popularity));
+    let tt: Vec<Media> = t
+        .into_iter()
+        .take(25)
+        .filter_map(|archived| {
+            let character: Option<Media> = archived.deserialize(&mut Infallible).ok();
+            character
+        })
+        .collect();
 
     Ok(tt)
 }
