@@ -1,0 +1,1027 @@
+export const snapshot = {};
+
+snapshot[`search characters with query "Luke" 1`] = `
+[
+  {
+    mediaTitle: [
+      "ONE PIECE",
+      "ONE PIECE",
+      "ONE PIECE",
+    ],
+    name: [
+      "Suke",
+      "スケさん",
+    ],
+    popularity: 506722,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Fairy Tail",
+      "FAIRY TAIL",
+      "FAIRY TAIL",
+    ],
+    name: [
+      "Loke",
+      "ロキ",
+    ],
+    popularity: 281355,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "The Promised Neverland",
+      "Yakusoku no Neverland",
+      "約束のネバーランド",
+    ],
+    name: [
+      "Luce",
+      "ルーチェ",
+    ],
+    popularity: 110521,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "The World God Only Knows: Goddesses",
+      "Kami nomi zo Shiru Sekai: Megami-hen",
+      "神のみぞ知るセカイ 女神篇",
+    ],
+    name: [
+      "Lune",
+      "リューネ",
+    ],
+    popularity: 55175,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "In the Land of Leadale",
+      "Leadale no Daichi nite",
+      "リアデイルの大地にて",
+    ],
+    name: [
+      "Luka",
+      "ルカ",
+    ],
+    popularity: 38190,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Pokémon: Black & White",
+      "Pocket Monsters Best Wishes!",
+      "ポケットモンスターベストウイッシュ",
+    ],
+    name: [
+      "Luke",
+      "ルーク",
+    ],
+    popularity: 24872,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "GARO -VANISHING LINE-",
+      "GARO -VANISHING LINE-",
+      "牙狼＜GARO＞-VANISHING LINE-",
+    ],
+    name: [
+      "Luke",
+      "ルーク",
+    ],
+    popularity: 15260,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Future Boy Conan",
+      "Mirai Shounen Conan",
+      "未来少年コナン",
+    ],
+    name: [
+      "Luke",
+      "ルーケ",
+    ],
+    popularity: 11573,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Sugar Sugar Rune",
+      "シュガシュガルーン",
+    ],
+    name: [
+      "Duke",
+      "デューク",
+    ],
+    popularity: 9097,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Blue Dragon",
+      "ブルー・ドラゴン",
+    ],
+    name: [
+      "Kluke",
+      "クルック",
+    ],
+    popularity: 8823,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Red Garden",
+      "Red Garden",
+      "レッド ガーデン",
+    ],
+    name: [
+      "Luke",
+    ],
+    popularity: 7572,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Black Jack",
+      "Black Jack",
+      "ブラック・ジャック",
+    ],
+    name: [
+      "Lune",
+    ],
+    popularity: 6840,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Doubutsu no Mori",
+      "どうぶつの森",
+    ],
+    name: [
+      "Bouquet",
+      "ブーケ",
+    ],
+    popularity: 6423,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "JK Haru is a Sex Worker in Another World",
+      "JK Haru wa Isekai de Shoufu ni Natta",
+      "JKハルは異世界で娼婦になった",
+    ],
+    name: [
+      "Lupe",
+      "ルペ",
+    ],
+    popularity: 5377,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Ai no Kusabi",
+      "Ai no Kusabi",
+      "間の楔",
+    ],
+    name: [
+      "Luke",
+    ],
+    popularity: 5030,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Dogs: Bullets & Carnage",
+      "DOGS: BULLETS & CARNAGE",
+      "DOGS / BULLETS & CARNAGE",
+    ],
+    name: [
+      "Luki",
+      "ルキ",
+    ],
+    popularity: 5023,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Sorcerer Hunters",
+      "Bakuretsu Hunters",
+      "爆れつハンター",
+    ],
+    name: [
+      "Lake",
+      "レーク",
+    ],
+    popularity: 4557,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "The Ember Knight",
+      "Janburui Gisa",
+      "잔불의 기사",
+    ],
+    name: [
+      "Luce",
+      "루스",
+    ],
+    popularity: 4271,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "4 Cut Hero",
+      "4-cut Yongsa",
+      "4컷용사",
+    ],
+    name: [
+      "Yuke",
+    ],
+    popularity: 4015,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Animal Land",
+      "Doubutsu no Kuni",
+      "どうぶつの国",
+    ],
+    name: [
+      "Luke",
+      "ルーク",
+    ],
+    popularity: 1916,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "God Troubles Me",
+      "Hanhua Riji",
+      "汉化日记",
+    ],
+    name: [
+      "Guke",
+      "顾客",
+    ],
+    popularity: 1893,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      ".hack//Legend of the Twilight",
+      ".hack//Tasogare no Udewa Densetsu",
+      ".hack//黄昏の腕輪伝説",
+    ],
+    name: [
+      "Luke",
+      "ルック",
+    ],
+    popularity: 1881,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Zoids Fuzors",
+      "Zoids Fuzors",
+      "ゾイド・フューザース",
+    ],
+    name: [
+      "Luke",
+      "リュック",
+    ],
+    popularity: 1534,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Hamelin no Violin Hiki",
+      "ハーメルンのバイオリン弾き",
+    ],
+    name: [
+      "Lute",
+      "リュート",
+    ],
+    popularity: 1438,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Mon Colle Knights",
+      "Rokumon Tengai Mon Colle Knights",
+      "六門天外モンコレナイト",
+    ],
+    name: [
+      "Luke",
+    ],
+    popularity: 1173,
+    score: 0,
+  },
+]
+`;
+
+snapshot[`search characters with query "Aqua" 1`] = `
+[
+  {
+    mediaTitle: [
+      "KONOSUBA -God's blessing on this wonderful world!",
+      "Kono Subarashii Sekai ni Shukufuku wo!",
+      "この素晴らしい世界に祝福を！",
+    ],
+    name: [
+      "Aqua",
+      "アクア",
+    ],
+    popularity: 376710,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Frieren: Beyond Journey’s End",
+      "Sousou no Frieren",
+      "葬送のフリーレン",
+    ],
+    name: [
+      "Qual",
+      "クヴァール",
+    ],
+    popularity: 152513,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "TSUKIMICHI -Moonlit Fantasy-",
+      "Tsuki ga Michibiku Isekai Douchuu",
+      "月が導く異世界道中",
+    ],
+    name: [
+      "Aqua",
+      "アクア",
+    ],
+    popularity: 93574,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Hamatora",
+      "Hamatora THE ANIMATION",
+      "ハマトラ THE ANIMATION",
+    ],
+    name: [
+      "Azusa",
+      "アズサ",
+    ],
+    popularity: 52363,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "The Legend of the Legendary Heroes",
+      "Densetsu no Yuusha no Densetsu",
+      "伝説の勇者の伝説",
+    ],
+    name: [
+      "Arua",
+      "アルア",
+    ],
+    popularity: 42848,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Kotaro Lives Alone",
+      "Kotarou wa Hitorigurashi",
+      "コタローは１人暮らし",
+    ],
+    name: [
+      "Aota",
+      "青田",
+    ],
+    popularity: 42177,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "Black Butler",
+      "Kuroshitsuji",
+      "黒執事",
+    ],
+    name: [
+      "Ada",
+      "エイダ",
+    ],
+    popularity: 29823,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "ARIA The ORIGINATION",
+      "ARIA The ORIGINATION",
+      "ARIA The ORIGINATION",
+    ],
+    name: [
+      "Anna",
+      "アンナ",
+    ],
+    popularity: 29065,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "Aura",
+      "AURA: Maryuuinkouga Saigo no Tatakai",
+      "AURA～魔竜院光牙最後の闘い～",
+    ],
+    name: [
+      "Hino",
+      "樋野",
+    ],
+    popularity: 24030,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "The Gymnastics Samurai",
+      "Taisou Zamurai",
+      "体操ザムライ",
+    ],
+    name: [
+      "Ayu",
+      "あゆ",
+    ],
+    popularity: 19121,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "FFF-Class Trashero",
+      "FFF Geum Gwansimyongsa",
+      "FFF급 관심용사",
+    ],
+    name: [
+      "Aqua",
+    ],
+    popularity: 16970,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Lostorage incited WIXOSS",
+      "Lostorage incited WIXOSS",
+      "Lostorage incited WIXOSS",
+    ],
+    name: [
+      "Aya",
+      "アーヤ",
+    ],
+    popularity: 12733,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "Yu-Gi-Oh! VRAINS",
+      "Yu☆Gi☆Oh! VRAINS",
+      "遊☆戯☆王VRAINS",
+    ],
+    name: [
+      "Aqua",
+      "アクア",
+    ],
+    popularity: 9498,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Marchen Awakens Romance",
+      "MÄR",
+      "メル",
+    ],
+    name: [
+      "Aqua",
+    ],
+    popularity: 7932,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Daemons of the Shadow Realm",
+      "Yomi no Tsugai",
+      "黄泉のツガイ",
+    ],
+    name: [
+      "Asa",
+      "アサ",
+    ],
+    popularity: 7196,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "Phantasy Star Online 2: Episode Oracle",
+      "PHANTASY STAR ONLINE 2: EPISODE ORACLE",
+      "PHANTASY STAR ONLINE 2 EPISODE ORACLE",
+    ],
+    name: [
+      "Quna",
+      "クーナ",
+    ],
+    popularity: 6124,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "Asura",
+      "アシュラ",
+    ],
+    name: [
+      "Houshi",
+      "法師",
+    ],
+    popularity: 6040,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "Magic Knight Rayearth II",
+      "魔法騎士（マジックナイト）レイアース II",
+    ],
+    name: [
+      "Aska",
+      "アスカ",
+    ],
+    popularity: 5401,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "World Teacher: Isekaishiki Kyouiku Agent",
+      "ワールド・ティーチャー 異世界式教育エージェント",
+    ],
+    name: [
+      "Aria",
+    ],
+    popularity: 5140,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "Updater",
+      "업데이터",
+    ],
+    name: [
+      "Aria",
+      "아리아",
+    ],
+    popularity: 5017,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "ESTAB LIFE: Great Escape",
+      "Estab-Life: Great Escape",
+      "エスタブライフ グレイトエスケープ",
+    ],
+    name: [
+      "Equa",
+      "エクア",
+    ],
+    popularity: 3470,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Moonrise",
+      "MOONRISE",
+      "ムーンライズ",
+    ],
+    name: [
+      "Al",
+      "アル",
+    ],
+    popularity: 3350,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "Jewelpet",
+      "Jewelpet",
+      "ジュエルペット",
+    ],
+    name: [
+      "Aqua",
+      "アクア",
+    ],
+    popularity: 3248,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Kingdom Hearts χ Back Cover",
+      "Kingdom Hearts χ Back Cover",
+      "キングダム ハーツ キー バックカバー",
+    ],
+    name: [
+      "Ava",
+      "アヴァ",
+    ],
+    popularity: 1606,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "AAA",
+      "AAA　（トリプルエー）",
+    ],
+    name: [
+      "Aoi Ogata",
+    ],
+    popularity: 1131,
+    score: 2,
+  },
+]
+`;
+
+snapshot[`search characters with query "Megumi" 1`] = `
+[
+  {
+    mediaTitle: [
+      "KONOSUBA -God's blessing on this wonderful world!",
+      "Kono Subarashii Sekai ni Shukufuku wo!",
+      "この素晴らしい世界に祝福を！",
+    ],
+    name: [
+      "Megumin",
+      "めぐみん",
+    ],
+    popularity: 376710,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Gintama",
+      "Gintama",
+      "銀魂",
+    ],
+    name: [
+      "Megami",
+      "女神",
+    ],
+    popularity: 217813,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Vinland Saga Season 2",
+      "VINLAND SAGA SEASON 2",
+      "ヴィンランド・サガ SEASON2",
+    ],
+    name: [
+      "Nezumi",
+      "ネズミ",
+    ],
+    popularity: 151696,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "The World's Finest Assassin Gets Reincarnated in Another World as an Aristocrat",
+      "Sekai Saikou no Ansatsusha, Isekai Kizoku ni Tensei suru",
+      "世界最高の暗殺者、異世界貴族に転生する",
+    ],
+    name: [
+      "Megami",
+      "女神",
+    ],
+    popularity: 124958,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Ping Pong the Animation",
+      "Ping Pong THE ANIMATION",
+      "ピンポン THE ANIMATION",
+    ],
+    name: [
+      "Egami",
+      "江上",
+    ],
+    popularity: 94032,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "TSUKIMICHI -Moonlit Fantasy-",
+      "Tsuki ga Michibiku Isekai Douchuu",
+      "月が導く異世界道中",
+    ],
+    name: [
+      "Megami",
+      "女神",
+    ],
+    popularity: 93574,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Dead Mount Death Play",
+      "Dead Mount Death Play",
+      "デッドマウント・デスプレイ",
+    ],
+    name: [
+      "Megami",
+      "女神",
+    ],
+    popularity: 58812,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Am I Actually the Strongest?",
+      "Jitsu wa Ore, Saikyou Deshita?",
+      "実は俺、最強でした？",
+    ],
+    name: [
+      "Megami",
+      "女神",
+    ],
+    popularity: 42500,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Pokémon the Series: Ruby and Sapphire",
+      "Pocket Monsters Advanced Generation",
+      "ポケットモンスター　アドバンスジェネレーション",
+    ],
+    name: [
+      "Megumi",
+      "メグミ",
+    ],
+    popularity: 37296,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Utawarerumono",
+      "Utawarerumono",
+      "うたわれるもの",
+    ],
+    name: [
+      "Mutsumi",
+      "ムツミ",
+    ],
+    popularity: 27151,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "Girls und Panzer der Film",
+      "Girls und Panzer Movie",
+      "ガールズ&パンツァー 劇場版",
+    ],
+    name: [
+      "Megumi",
+      "メグミ",
+    ],
+    popularity: 24115,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Welcome to Irabu's Office",
+      "Kuuchuu Buranko",
+      "空中ブランコ",
+    ],
+    name: [
+      "Mayumi",
+      "マユミ",
+    ],
+    popularity: 21986,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "Medaka Box",
+      "めだかボックス",
+    ],
+    name: [
+      "Mogami",
+      "もがみ",
+    ],
+    popularity: 18920,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "Bikini Warriors",
+      "BIKINI WARRIORS",
+      "ビキニ・ウォリアーズ",
+    ],
+    name: [
+      "Megami",
+      "女神",
+    ],
+    popularity: 18767,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "Harmonie",
+      "アルモニ",
+    ],
+    name: [
+      "Mayumi",
+      "マユミ",
+    ],
+    popularity: 13051,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "KanColle Season 2: Let's Meet at Sea",
+      "KanColle: Itsuka Ano Umi de",
+      "艦これ いつかあの海で",
+    ],
+    name: [
+      "Mogami",
+      "最上",
+    ],
+    popularity: 12545,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "Elegant Yokai Apartment Life",
+      "Youkai Apartment no Yuuga na Nichijou",
+      "妖怪アパートの幽雅な日常",
+    ],
+    name: [
+      "Egami",
+      "江上",
+    ],
+    popularity: 12363,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "Sunny",
+      "Sunny",
+      "Sunny",
+    ],
+    name: [
+      "Megumu",
+      "めぐむ",
+    ],
+    popularity: 9823,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "City Hunter 2",
+      "City Hunter 2",
+      "シティーハンター2",
+    ],
+    name: [
+      "Egami",
+      "江神",
+    ],
+    popularity: 5660,
+    score: 2,
+  },
+  {
+    mediaTitle: [
+      "Pretty Cure Max Heart",
+      "Futari wa Precure: Max Heart",
+      "ふたりはプリキュア Max Heart",
+    ],
+    name: [
+      "Megumi",
+      "メグミ",
+    ],
+    popularity: 5214,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Pretty Rhythm: Rainbow Live",
+      "プリズティーリズム・レインボーライブ",
+    ],
+    name: [
+      "Megumi",
+      "めぐみ",
+    ],
+    popularity: 3316,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Apocalypse Zero",
+      "Kakugo no Susume",
+      "覚悟のススメ",
+    ],
+    name: [
+      "Megumi",
+      "恵魅",
+    ],
+    popularity: 3069,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Shutohel",
+      "シュトヘル",
+    ],
+    name: [
+      "Melumi",
+      "メルミ",
+    ],
+    popularity: 2860,
+    score: 1,
+  },
+  {
+    mediaTitle: [
+      "HIGH SCORE",
+      "HIGH SCORE",
+    ],
+    name: [
+      "Megumi",
+      "メグミ",
+    ],
+    popularity: 2126,
+    score: 0,
+  },
+  {
+    mediaTitle: [
+      "Little Shark's Day Out",
+      "Odekake Kozame",
+      "おでかけ子ザメ",
+    ],
+    name: [
+      "Megami",
+      "女神",
+    ],
+    popularity: 1329,
+    score: 1,
+  },
+]
+`;
+
+snapshot[`search media with query "Konosuba" 1`] = `
+[
+  {
+    name: [
+      "KONOSUBA -God's blessing on this wonderful world!",
+      "Kono Subarashii Sekai ni Shukufuku wo!",
+      "この素晴らしい世界に祝福を！",
+    ],
+    popularity: 376710,
+    score: 30,
+  },
+  {
+    name: [
+      "KONOSUBA -God's blessing on this wonderful world! 2",
+      "Kono Subarashii Sekai ni Shukufuku wo! 2",
+      "この素晴らしい世界に祝福を！2",
+    ],
+    popularity: 277620,
+    score: 32,
+  },
+  {
+    name: [
+      "KONOSUBA -God's blessing on this wonderful world!- Legend of Crimson",
+      "Kono Subarashii Sekai ni Shukufuku wo! Kurenai Densetsu",
+      "この素晴らしい世界に祝福を！紅伝説",
+    ],
+    popularity: 171767,
+    score: 46,
+  },
+  {
+    name: [
+      "KONOSUBA -God's blessing on this wonderful world! 2: God's Blessings on These Wonderful Works of Art!",
+      "Kono Subarashii Sekai ni Shukufuku wo! 2: Kono Subarashii Geijutsu ni Shukufuku wo!",
+      "この素晴らしい世界に祝福を！ 2 この素晴らしい芸術に祝福を!",
+    ],
+    popularity: 83648,
+    score: 70,
+  },
+  {
+    name: [
+      "KONOSUBA -An Explosion on This Wonderful World!",
+      "Kono Subarashii Sekai ni Bakuen wo!",
+      "この素晴らしい世界に爆焔を！",
+    ],
+    popularity: 78324,
+    score: 27,
+  },
+  {
+    name: [
+      "KONOSUBA -God's Blessing on This Wonderful World! 3",
+      "Kono Subarashii Sekai ni Shukufuku wo! 3",
+      "この素晴らしい世界に祝福を! 3",
+    ],
+    popularity: 65254,
+    score: 32,
+  },
+]
+`;

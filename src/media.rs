@@ -1,41 +1,92 @@
-use crate::{create_index_fn, searchable, tokenizer, Index, Insert};
 use std::collections::HashSet;
+
+use crate::{create, normalize_text, tokenizer, Fields, Index};
+
+use rkyv::{Deserialize, Infallible};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen(getter_with_clone)]
-#[derive(
-    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, serde::Serialize, serde::Deserialize, Clone,
-)]
-struct Media {
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, serde::Deserialize, Clone)]
+pub struct Media {
     pub id: String,
     pub title: Vec<String>,
     pub popularity: u32,
 }
 
-searchable!(Media, title);
+#[wasm_bindgen]
+#[derive(Clone)]
+pub struct MediaResult {
+    pub score: u32,
+    #[wasm_bindgen(getter_with_clone)]
+    pub media: Media,
+}
 
-create_index_fn!(Media, create_media_index);
+impl Fields for Media {
+    fn fields(&self) -> Vec<String> {
+        self.title.clone()
+    }
+}
 
-// #[wasm_bindgen]
-// pub fn search_media(query: &str, index_file: &[u8]) -> Result<Vec<Media>,, JsError> {
-//     let index = unsafe { rkyv::archived_root::<Index<Media>>(index_file) };
+#[wasm_bindgen]
+pub fn create_media_index(json: &str) -> Result<Vec<u8>, JsError> {
+    let items: Vec<Media> = serde_json::from_str(json)?;
+    create(items)
+}
 
-//     let lev_automaton_builder = levenshtein_automata::LevenshteinAutomatonBuilder::new(1, true);
+#[wasm_bindgen]
+pub fn search_media(query: &str, index_file: &[u8]) -> Result<Vec<MediaResult>, JsError> {
+    let tokens = tokenizer(query.to_string());
 
-//     let dfa = lev_automaton_builder.build_dfa(query);
+    let index = unsafe { rkyv::archived_root::<Index<Media>>(index_file) };
 
-//     for key in index.refs.keys() {
-//         let mut state = dfa.initial_state();
+    let lev_automaton_builder = levenshtein_automata::LevenshteinAutomatonBuilder::new(2, true);
 
-//         for &b in key.as_bytes() {
-//             state = dfa.transition(state, b);
-//         }
+    let mut results = HashSet::<u32>::new();
 
-//         match dfa.distance(state) {
-//             levenshtein_automata::Distance::Exact(_) => console_log!("{:?}", key),
-//             levenshtein_automata::Distance::AtLeast(_) => (),
-//         }
-//     }
+    for token in tokens {
+        let dfa = lev_automaton_builder.build_dfa(&token);
 
-//     Ok(())
-// }
+        for key in index.refs.keys() {
+            let mut state = dfa.initial_state();
+
+            for &b in key.as_bytes() {
+                state = dfa.transition(state, b);
+            }
+
+            if let levenshtein_automata::Distance::Exact(_) = dfa.distance(state) {
+                if let Some(refs) = index.refs.get(key) {
+                    results.extend(refs.iter());
+                }
+            }
+        }
+    }
+
+    let normalized_query = normalize_text(query).into_bytes();
+
+    let mut t: Vec<MediaResult> = results
+        .iter()
+        .filter_map(|i| {
+            let archived = index.data.get(*i as usize)?;
+            let media: Media = archived.deserialize(&mut Infallible).ok()?;
+
+            let score = media
+                .fields()
+                .iter()
+                .map(|s| {
+                    let normalized = normalize_text(s);
+                    triple_accel::levenshtein(normalized.as_bytes(), &normalized_query)
+                })
+                .min()?;
+
+            Some(MediaResult { score, media })
+        })
+        .collect();
+
+    t.sort_by(|a, b| a.score.cmp(&b.score));
+
+    let mut tt: Vec<MediaResult> = t.into_iter().take(25).collect();
+
+    tt.sort_by(|a, b| b.media.popularity.cmp(&a.media.popularity));
+
+    Ok(tt)
+}

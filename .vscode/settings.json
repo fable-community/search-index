@@ -19,6 +19,7 @@
     ".git": true,
     "build": true,
     "target": true,
+    "__snapshots__": true,
   },
   "explorer.fileNesting.patterns": {
     "README.md": "LICENSE,.gitignore",

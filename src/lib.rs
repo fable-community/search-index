@@ -26,14 +26,18 @@ pub(crate) fn tokenizer(text: String) -> Vec<String> {
     words.collect::<Vec<String>>()
 }
 
-#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)]
+#[derive(rkyv::Archive, rkyv::Serialize)]
 pub(crate) struct Index<T> {
     pub(crate) refs: BTreeMap<String, HashSet<u32>>,
     pub(crate) data: Vec<T>,
 }
 
+pub(crate) trait Fields {
+    fn fields(&self) -> Vec<String>;
+}
+
 pub(crate) trait Insert<T> {
-    fn insert(&mut self, item: T);
+    fn insert(&mut self, item: &T);
 }
 
 impl<T> Index<T> {
@@ -45,50 +49,52 @@ impl<T> Index<T> {
     }
 }
 
-#[macro_export]
-macro_rules! searchable {
-    ($type:ty, $($field:ident),*) => {
-        impl Insert<$type> for Index<$type> {
-            fn insert(&mut self, item: $type) -> () {
-                let i = self.data.len();
+impl<T> Insert<T> for Index<T>
+where
+    T: Fields + Clone,
+{
+    fn insert(&mut self, item: &T) -> () {
+        let i = self.data.len();
 
-                let mut combined = Vec::new();
+        let combined = item.fields();
 
-                $(combined.extend(&item.$field);)*
+        for s in &combined {
+            let terms = tokenizer((*s).clone());
 
-                for s in &combined {
-                    let terms = tokenizer((*s).clone());
-
-                    for term in terms {
-                        self.refs
-                            .entry(term)
-                            .or_insert_with(HashSet::new)
-                            .insert(i as u32);
-                    }
-                }
-
-                self.data.push(item);
+            for term in terms {
+                self.refs
+                    .entry(term)
+                    .or_insert_with(HashSet::new)
+                    .insert(i as u32);
             }
         }
-    };
+
+        self.data.push(item.clone());
+    }
 }
 
-#[macro_export]
-macro_rules! create_index_fn {
-    ($type:ty, $fn_name:ident) => {
-        #[wasm_bindgen]
-        pub fn $fn_name(json: &str) -> Result<Vec<u8>, JsError> {
-            let mut index = Index::<$type>::default();
+pub(crate) fn create<T>(items: Vec<T>) -> Result<Vec<u8>, JsError>
+where
+    Index<T>: Insert<T>,
+    T: Clone
+        + rkyv::Serialize<
+            rkyv::ser::serializers::CompositeSerializer<
+                rkyv::ser::serializers::AlignedSerializer<rkyv::AlignedVec>,
+                rkyv::ser::serializers::FallbackScratch<
+                    rkyv::ser::serializers::HeapScratch<8192>,
+                    rkyv::ser::serializers::AllocScratch,
+                >,
+                rkyv::ser::serializers::SharedSerializeMap,
+            >,
+        >,
+{
+    let mut index = Index::<T>::default();
 
-            let items: Vec<$type> = serde_json::from_str(json)?;
+    for item in &items {
+        index.insert(item);
+    }
 
-            for item in &items {
-                index.insert(item.clone());
-            }
+    let buf = rkyv::to_bytes::<_, 8192>(&index)?;
 
-            let buf = rkyv::to_bytes::<_, 8192>(&index)?;
-
-            Ok(buf.to_vec())
-        }
-    };
+    Ok(buf.to_vec())
 }

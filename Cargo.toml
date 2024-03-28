@@ -18,6 +18,7 @@ anyhow = "1.0.71"
 unidecode = "0.3.0"
 rkyv = "0.7.44"
 levenshtein_automata = "0.2.1"
+triple_accel = "0.4.0"
 
 [profile.release]
 lto = true
