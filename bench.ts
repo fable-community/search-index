@@ -1,5 +1,4 @@
 import * as search from './build/search_index.js';
-import { Character } from './build/search_index.js';
 
 console.time('elapsed');
 

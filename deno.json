@@ -12,7 +12,7 @@
   },
   "lock": false,
   "lint": {
-    "include": ["mod.ts", "bench.ts"],
+    "include": ["mod.ts"],
     "rules": {
       "tags": ["recommended"],
       "include": [
