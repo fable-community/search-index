@@ -169,55 +169,83 @@ pub fn search_characters(
     Ok(deserialized)
 }
 
+macro_rules! filter_characters {
+    ($character:expr, $rating:expr, $popularity_lesser:expr, $popularity_greater:expr, $role:expr) => {
+        if let Some(rating) = $rating {
+            if $character.rating != rating {
+                return None;
+            }
+        }
+
+        if let Some(popularity_lesser) = $popularity_lesser {
+            if $character.popularity < popularity_lesser {
+                return None;
+            }
+        }
+
+        if let Some(popularity_greater) = $popularity_greater {
+            if $character.popularity < popularity_greater {
+                return None;
+            }
+        }
+
+        if let Some(role) = &$role {
+            if &$character.role.to_string() != role {
+                return None;
+            }
+        }
+    };
+}
+
 #[wasm_bindgen]
 pub fn filter_characters(
+    index_file: Option<Vec<u8>>,
+    extra: Option<Vec<Character>>,
     role: Option<String>,
     popularity_lesser: Option<u32>,
     popularity_greater: Option<u32>,
     rating: Option<u32>,
-    index_file: &[u8],
 ) -> Result<Vec<Character>, JsError> {
-    let index = unsafe { rkyv::archived_root::<Index<Character>>(index_file) };
+    let index = index_file
+        .as_ref()
+        .map(|index_file| unsafe { rkyv::archived_root::<Index<Character>>(index_file) });
 
-    let results_as_archived: Vec<&ArchivedCharacter> = index
-        .data
-        .iter()
-        .filter_map(|character| {
-            if let Some(rating) = rating {
-                if character.rating != rating {
-                    return None;
-                }
-            }
+    let indexed_filtered: Vec<Character> = index.map_or(Vec::new(), |index| {
+        index
+            .data
+            .iter()
+            .filter_map(|character| {
+                filter_characters!(
+                    character,
+                    rating,
+                    popularity_lesser,
+                    popularity_greater,
+                    role
+                );
 
-            if let Some(popularity_lesser) = popularity_lesser {
-                if character.popularity < popularity_lesser {
-                    return None;
-                }
-            }
+                let character: Option<Character> = character.deserialize(&mut Infallible).ok();
 
-            if let Some(popularity_greater) = popularity_greater {
-                if character.popularity < popularity_greater {
-                    return None;
-                }
-            }
+                character
+            })
+            .collect()
+    });
 
-            if let Some(role) = &role {
-                if role != &character.role.to_string() {
-                    return None;
-                }
-            }
+    let extra_filtered: Vec<Character> = extra.map_or(Vec::new(), |index| {
+        index
+            .into_iter()
+            .filter_map(|character| {
+                filter_characters!(
+                    character,
+                    rating,
+                    popularity_lesser,
+                    popularity_greater,
+                    role
+                );
 
-            Some(character)
-        })
-        .collect();
+                Some(character)
+            })
+            .collect()
+    });
 
-    let deserialized: Vec<Character> = results_as_archived
-        .into_iter()
-        .filter_map(|archived| {
-            let item: Option<Character> = archived.deserialize(&mut Infallible).ok();
-            item
-        })
-        .collect();
-
-    Ok(deserialized)
+    Ok([indexed_filtered, extra_filtered].concat())
 }

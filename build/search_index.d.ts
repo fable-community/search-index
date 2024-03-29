@@ -13,14 +13,15 @@ export function create_characters_index(json: string): Uint8Array;
 */
 export function search_characters(query: string, index_file?: Uint8Array, extra?: (Character)[]): (Character)[];
 /**
-* @param {string | undefined} role
-* @param {number | undefined} popularity_lesser
-* @param {number | undefined} popularity_greater
-* @param {number | undefined} rating
-* @param {Uint8Array} index_file
+* @param {Uint8Array | undefined} [index_file]
+* @param {(Character)[] | undefined} [extra]
+* @param {string | undefined} [role]
+* @param {number | undefined} [popularity_lesser]
+* @param {number | undefined} [popularity_greater]
+* @param {number | undefined} [rating]
 * @returns {(Character)[]}
 */
-export function filter_characters(role: string | undefined, popularity_lesser: number | undefined, popularity_greater: number | undefined, rating: number | undefined, index_file: Uint8Array): (Character)[];
+export function filter_characters(index_file?: Uint8Array, extra?: (Character)[], role?: string, popularity_lesser?: number, popularity_greater?: number, rating?: number): (Character)[];
 /**
 * @param {string} json
 * @returns {Uint8Array}

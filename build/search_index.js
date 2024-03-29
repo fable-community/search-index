@@ -204,21 +204,24 @@ export function search_characters(query, index_file, extra) {
 }
 
 /**
-* @param {string | undefined} role
-* @param {number | undefined} popularity_lesser
-* @param {number | undefined} popularity_greater
-* @param {number | undefined} rating
-* @param {Uint8Array} index_file
+* @param {Uint8Array | undefined} [index_file]
+* @param {(Character)[] | undefined} [extra]
+* @param {string | undefined} [role]
+* @param {number | undefined} [popularity_lesser]
+* @param {number | undefined} [popularity_greater]
+* @param {number | undefined} [rating]
 * @returns {(Character)[]}
 */
-export function filter_characters(role, popularity_lesser, popularity_greater, rating, index_file) {
+export function filter_characters(index_file, extra, role, popularity_lesser, popularity_greater, rating) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        var ptr0 = isLikeNone(role) ? 0 : passStringToWasm0(role, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
+        var ptr0 = isLikeNone(index_file) ? 0 : passArray8ToWasm0(index_file, wasm.__wbindgen_export_0);
         var len0 = WASM_VECTOR_LEN;
-        const ptr1 = passArray8ToWasm0(index_file, wasm.__wbindgen_export_0);
-        const len1 = WASM_VECTOR_LEN;
-        wasm.filter_characters(retptr, ptr0, len0, !isLikeNone(popularity_lesser), isLikeNone(popularity_lesser) ? 0 : popularity_lesser, !isLikeNone(popularity_greater), isLikeNone(popularity_greater) ? 0 : popularity_greater, !isLikeNone(rating), isLikeNone(rating) ? 0 : rating, ptr1, len1);
+        var ptr1 = isLikeNone(extra) ? 0 : passArrayJsValueToWasm0(extra, wasm.__wbindgen_export_0);
+        var len1 = WASM_VECTOR_LEN;
+        var ptr2 = isLikeNone(role) ? 0 : passStringToWasm0(role, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
+        var len2 = WASM_VECTOR_LEN;
+        wasm.filter_characters(retptr, ptr0, len0, ptr1, len1, ptr2, len2, !isLikeNone(popularity_lesser), isLikeNone(popularity_lesser) ? 0 : popularity_lesser, !isLikeNone(popularity_greater), isLikeNone(popularity_greater) ? 0 : popularity_greater, !isLikeNone(rating), isLikeNone(rating) ? 0 : rating);
         var r0 = getInt32Memory0()[retptr / 4 + 0];
         var r1 = getInt32Memory0()[retptr / 4 + 1];
         var r2 = getInt32Memory0()[retptr / 4 + 2];
@@ -226,9 +229,9 @@ export function filter_characters(role, popularity_lesser, popularity_greater, r
         if (r3) {
             throw takeObject(r2);
         }
-        var v3 = getArrayJsValueFromWasm0(r0, r1).slice();
+        var v4 = getArrayJsValueFromWasm0(r0, r1).slice();
         wasm.__wbindgen_export_2(r0, r1 * 4, 4);
-        return v3;
+        return v4;
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
     }
@@ -589,6 +592,10 @@ export class Media {
 
 const imports = {
     __wbindgen_placeholder__: {
+        __wbg_character_unwrap: function(arg0) {
+            const ret = Character.__unwrap(takeObject(arg0));
+            return ret;
+        },
         __wbg_character_new: function(arg0) {
             const ret = Character.__wrap(arg0);
             return addHeapObject(ret);
@@ -596,10 +603,6 @@ const imports = {
         __wbindgen_error_new: function(arg0, arg1) {
             const ret = new Error(getStringFromWasm0(arg0, arg1));
             return addHeapObject(ret);
-        },
-        __wbg_character_unwrap: function(arg0) {
-            const ret = Character.__unwrap(takeObject(arg0));
-            return ret;
         },
         __wbg_media_unwrap: function(arg0) {
             const ret = Media.__unwrap(takeObject(arg0));
