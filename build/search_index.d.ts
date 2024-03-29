@@ -40,16 +40,20 @@ export class Character {
   free(): void;
 /**
 * @param {string} id
+* @param {string} media_id
 * @param {(string)[]} name
 * @param {(string)[]} media_title
 * @param {number} popularity
 * @param {number} rating
 * @param {string} role
 */
-  constructor(id: string, name: (string)[], media_title: (string)[], popularity: number, rating: number, role: string);
+  constructor(id: string, media_id: string, name: (string)[], media_title: (string)[], popularity: number, rating: number, role: string);
 /**
 */
   id: string;
+/**
+*/
+  mediaId: string;
 /**
 */
   mediaTitle: (string)[];

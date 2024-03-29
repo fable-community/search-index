@@ -8,6 +8,9 @@ use wasm_bindgen::prelude::*;
 pub struct Character {
     #[wasm_bindgen(getter_with_clone)]
     pub id: String,
+    #[serde(rename = "mediaId")]
+    #[wasm_bindgen(getter_with_clone, js_name = mediaId)]
+    pub media_id: String,
     #[wasm_bindgen(getter_with_clone)]
     pub name: Vec<String>,
     #[serde(rename = "mediaTitle")]
@@ -37,6 +40,7 @@ impl Character {
     #[wasm_bindgen(constructor)]
     pub fn create(
         id: String,
+        media_id: String,
         name: Vec<String>,
         media_title: Vec<String>,
         popularity: u32,
@@ -45,6 +49,7 @@ impl Character {
     ) -> Character {
         Character {
             id,
+            media_id,
             name,
             media_title,
             popularity,
