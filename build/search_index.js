@@ -200,12 +200,37 @@ export function search_characters(query, index_file) {
     }
 }
 
-function _assertClass(instance, klass) {
-    if (!(instance instanceof klass)) {
-        throw new Error(`expected instance of ${klass.name}`);
+/**
+* @param {string | undefined} role
+* @param {number | undefined} popularity_lesser
+* @param {number | undefined} popularity_greater
+* @param {number | undefined} rating
+* @param {Uint8Array} index_file
+* @returns {(Character)[]}
+*/
+export function filter_characters(role, popularity_lesser, popularity_greater, rating, index_file) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        var ptr0 = isLikeNone(role) ? 0 : passStringToWasm0(role, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
+        var len0 = WASM_VECTOR_LEN;
+        const ptr1 = passArray8ToWasm0(index_file, wasm.__wbindgen_export_0);
+        const len1 = WASM_VECTOR_LEN;
+        wasm.filter_characters(retptr, ptr0, len0, !isLikeNone(popularity_lesser), isLikeNone(popularity_lesser) ? 0 : popularity_lesser, !isLikeNone(popularity_greater), isLikeNone(popularity_greater) ? 0 : popularity_greater, !isLikeNone(rating), isLikeNone(rating) ? 0 : rating, ptr1, len1);
+        var r0 = getInt32Memory0()[retptr / 4 + 0];
+        var r1 = getInt32Memory0()[retptr / 4 + 1];
+        var r2 = getInt32Memory0()[retptr / 4 + 2];
+        var r3 = getInt32Memory0()[retptr / 4 + 3];
+        if (r3) {
+            throw takeObject(r2);
+        }
+        var v3 = getArrayJsValueFromWasm0(r0, r1).slice();
+        wasm.__wbindgen_export_2(r0, r1 * 4, 4);
+        return v3;
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
     }
-    return instance.ptr;
 }
+
 /**
 * @param {string} json
 * @returns {Uint8Array}
@@ -497,62 +522,14 @@ export class Media {
     }
 }
 
-const MediaResultFinalization = (typeof FinalizationRegistry === 'undefined')
-    ? { register: () => {}, unregister: () => {} }
-    : new FinalizationRegistry(ptr => wasm.__wbg_mediaresult_free(ptr >>> 0));
-/**
-*/
-export class MediaResult {
-
-    __destroy_into_raw() {
-        const ptr = this.__wbg_ptr;
-        this.__wbg_ptr = 0;
-        MediaResultFinalization.unregister(this);
-        return ptr;
-    }
-
-    free() {
-        const ptr = this.__destroy_into_raw();
-        wasm.__wbg_mediaresult_free(ptr);
-    }
-    /**
-    * @returns {number}
-    */
-    get score() {
-        const ret = wasm.__wbg_get_mediaresult_score(this.__wbg_ptr);
-        return ret >>> 0;
-    }
-    /**
-    * @param {number} arg0
-    */
-    set score(arg0) {
-        wasm.__wbg_set_mediaresult_score(this.__wbg_ptr, arg0);
-    }
-    /**
-    * @returns {Media}
-    */
-    get media() {
-        const ret = wasm.__wbg_get_mediaresult_media(this.__wbg_ptr);
-        return Media.__wrap(ret);
-    }
-    /**
-    * @param {Media} arg0
-    */
-    set media(arg0) {
-        _assertClass(arg0, Media);
-        var ptr0 = arg0.__destroy_into_raw();
-        wasm.__wbg_set_mediaresult_media(this.__wbg_ptr, ptr0);
-    }
-}
-
 const imports = {
     __wbindgen_placeholder__: {
-        __wbindgen_error_new: function(arg0, arg1) {
-            const ret = new Error(getStringFromWasm0(arg0, arg1));
-            return addHeapObject(ret);
-        },
         __wbg_character_new: function(arg0) {
             const ret = Character.__wrap(arg0);
+            return addHeapObject(ret);
+        },
+        __wbindgen_error_new: function(arg0, arg1) {
+            const ret = new Error(getStringFromWasm0(arg0, arg1));
             return addHeapObject(ret);
         },
         __wbg_media_new: function(arg0) {

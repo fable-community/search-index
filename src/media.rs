@@ -6,17 +6,11 @@ use wasm_bindgen::prelude::*;
 #[wasm_bindgen(getter_with_clone)]
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, serde::Deserialize, Clone)]
 pub struct Media {
+    #[wasm_bindgen(getter_with_clone)]
     pub id: String,
+    #[wasm_bindgen(getter_with_clone)]
     pub title: Vec<String>,
     pub popularity: u32,
-}
-
-#[wasm_bindgen]
-#[derive(Clone)]
-pub struct MediaResult {
-    pub score: u32,
-    #[wasm_bindgen(getter_with_clone)]
-    pub media: Media,
 }
 
 impl Fields for Media {

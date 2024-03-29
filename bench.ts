@@ -1,17 +1,15 @@
+import * as search from './build/search_index.js';
 
-import * as search from "./build/search_index.js";
-
-console.time('search');
+console.time('elapsed');
 
 const charactersIndex = await Deno.readFile('./characters_index.bin');
 const results = search.search_characters('megumin', charactersIndex)
-.map((t) => ({
-  name: t.name,
-  mediaTitle: t.mediaTitle,
-  popularity: t.popularity,
-}));
+  .map((t) => ({
+    name: t.name,
+    mediaTitle: t.mediaTitle,
+    popularity: t.popularity,
+  }));
 console.log(results.slice(0, 3));
-
 
 // console.time('start');
 // const mediaIndex = await Deno.readFile('./media_index.bin');
@@ -22,9 +20,22 @@ console.log(results.slice(0, 3));
 // }));
 // console.log(results.slice(0, 3));
 
+// const charactersIndex = await Deno.readFile('./characters_index.bin');
+// const results = search.filter_characters(
+//   undefined,
+//   500_000,
+//   510_000,
+//   5,
+//   charactersIndex,
+// )
+//   .map((t) => ({
+//     name: t.name,
+//     mediaTitle: t.mediaTitle,
+//     popularity: t.popularity,
+//   }));
+// console.log(results.slice(0, 3));
 
-console.timeEnd('search');
-
+console.timeEnd('elapsed');
 
 // //
 // const mediaCache = await Deno.readTextFile('./media_cache.json');

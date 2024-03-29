@@ -4,20 +4,24 @@ use rkyv::{Deserialize, Infallible};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, serde::Deserialize, Clone)]
+#[derive(
+    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, serde::Deserialize, PartialEq, Clone, Copy,
+)]
 pub enum CharacterRole {
     MAIN,
     SUPPORTING,
     BACKGROUND,
 }
 
-#[wasm_bindgen(getter_with_clone)]
+#[wasm_bindgen]
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, serde::Deserialize, Clone)]
 pub struct Character {
+    #[wasm_bindgen(getter_with_clone)]
     pub id: String,
+    #[wasm_bindgen(getter_with_clone)]
     pub name: Vec<String>,
     #[serde(rename = "mediaTitle")]
-    #[wasm_bindgen(js_name = mediaTitle)]
+    #[wasm_bindgen(getter_with_clone, js_name = mediaTitle)]
     pub media_title: Vec<String>,
     pub popularity: u32,
     pub rating: u32,
@@ -82,6 +86,73 @@ pub fn search_characters(query: &str, index_file: &[u8]) -> Result<Vec<Character
         .into_iter()
         .take(25)
         .filter_map(|(archived, _)| {
+            let item: Option<Character> = archived.deserialize(&mut Infallible).ok();
+            item
+        })
+        .collect();
+
+    Ok(deserialized)
+}
+
+#[wasm_bindgen]
+pub fn filter_characters(
+    role: Option<String>,
+    popularity_lesser: Option<u32>,
+    popularity_greater: Option<u32>,
+    rating: Option<u32>,
+    index_file: &[u8],
+) -> Result<Vec<Character>, JsError> {
+    let index = unsafe { rkyv::archived_root::<Index<Character>>(index_file) };
+
+    let results_as_archived: Vec<&ArchivedCharacter> = index
+        .data
+        .iter()
+        .filter_map(|character| {
+            if let Some(rating) = rating {
+                if character.rating != rating {
+                    return None;
+                }
+            }
+
+            if let Some(popularity_lesser) = popularity_lesser {
+                if character.popularity < popularity_lesser {
+                    return None;
+                }
+            }
+
+            if let Some(popularity_greater) = popularity_greater {
+                if character.popularity < popularity_greater {
+                    return None;
+                }
+            }
+
+            if let Some(role) = &role {
+                match character.role {
+                    ArchivedCharacterRole::MAIN => {
+                        if role != "MAIN" {
+                            return None;
+                        }
+                    }
+                    ArchivedCharacterRole::SUPPORTING => {
+                        if role != "SUPPORTING" {
+                            return None;
+                        }
+                    }
+                    ArchivedCharacterRole::BACKGROUND => {
+                        if role != "BACKGROUND" {
+                            return None;
+                        }
+                    }
+                }
+            }
+
+            Some(character)
+        })
+        .collect();
+
+    let deserialized: Vec<Character> = results_as_archived
+        .into_iter()
+        .filter_map(|archived| {
             let item: Option<Character> = archived.deserialize(&mut Infallible).ok();
             item
         })

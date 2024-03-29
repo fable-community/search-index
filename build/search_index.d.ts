@@ -12,6 +12,15 @@ export function create_characters_index(json: string): Uint8Array;
 */
 export function search_characters(query: string, index_file: Uint8Array): (Character)[];
 /**
+* @param {string | undefined} role
+* @param {number | undefined} popularity_lesser
+* @param {number | undefined} popularity_greater
+* @param {number | undefined} rating
+* @param {Uint8Array} index_file
+* @returns {(Character)[]}
+*/
+export function filter_characters(role: string | undefined, popularity_lesser: number | undefined, popularity_greater: number | undefined, rating: number | undefined, index_file: Uint8Array): (Character)[];
+/**
 * @param {string} json
 * @returns {Uint8Array}
 */
@@ -65,15 +74,4 @@ export class Media {
 /**
 */
   title: (string)[];
-}
-/**
-*/
-export class MediaResult {
-  free(): void;
-/**
-*/
-  media: Media;
-/**
-*/
-  score: number;
 }

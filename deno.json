@@ -8,11 +8,11 @@
     "useTabs": false,
     "singleQuote": true,
     "indentWidth": 2,
-    "include": ["mod.ts"]
+    "include": ["mod.ts", "bench.ts"]
   },
   "lock": false,
   "lint": {
-    "include": ["mod.ts"],
+    "include": ["mod.ts", "bench.ts"],
     "rules": {
       "tags": ["recommended"],
       "include": [
