@@ -1,9 +1,9 @@
-use crate::{create, tokenizer, Fields, Index};
-use hashbrown::HashSet;
+use crate::{create, tokenizer, Fields, Index, Insert};
+use hashbrown::HashMap;
 use rkyv::{Deserialize, Infallible};
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen(getter_with_clone)]
+#[wasm_bindgen]
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, serde::Deserialize, Clone)]
 pub struct Media {
     #[wasm_bindgen(getter_with_clone)]
@@ -13,9 +13,28 @@ pub struct Media {
     pub popularity: u32,
 }
 
+struct Item<'a> {
+    archived: Option<&'a ArchivedMedia>,
+    document: Option<Media>,
+    popularity: &'a u32,
+    score: u8,
+}
+
 impl Fields for Media {
     fn fields(&self) -> Vec<String> {
         self.title.clone()
+    }
+}
+
+#[wasm_bindgen]
+impl Media {
+    #[wasm_bindgen(constructor)]
+    pub fn create(id: String, title: Vec<String>, popularity: u32) -> Media {
+        Media {
+            id,
+            title,
+            popularity,
+        }
     }
 }
 
@@ -26,53 +45,108 @@ pub fn create_media_index(json: &str) -> Result<Vec<u8>, JsError> {
 }
 
 #[wasm_bindgen]
-pub fn search_media(query: &str, index_file: &[u8]) -> Result<Vec<Media>, JsError> {
+pub fn search_media(
+    query: &str,
+    index_file: Option<Vec<u8>>,
+    extra: Option<Vec<Media>>,
+) -> Result<Vec<Media>, JsError> {
     let tokens = tokenizer(query.to_string());
 
-    let index = unsafe { rkyv::archived_root::<Index<Media>>(index_file) };
+    let index = index_file
+        .as_ref()
+        .map(|index_file| unsafe { rkyv::archived_root::<Index<Media>>(index_file) });
+
+    let exrta_index = extra.as_ref().map(|extra| {
+        let mut index = Index::<Media>::default();
+
+        for media in extra {
+            index.insert(media);
+        }
+
+        index
+    });
 
     let lev_automaton_builder = levenshtein_automata::LevenshteinAutomatonBuilder::new(1, true);
 
-    let mut results = HashSet::<(&u32, u8)>::new();
+    let mut items = HashMap::<String, Item>::new();
 
-    for token in tokens {
+    for token in &tokens {
         let dfa = lev_automaton_builder.build_dfa(&token);
 
-        for key in index.refs.keys() {
-            let mut state = dfa.initial_state();
+        if let Some(index) = index {
+            for key in index.refs.keys() {
+                let mut state = dfa.initial_state();
 
-            for &b in key.as_bytes() {
-                state = dfa.transition(state, b);
+                for &b in key.as_bytes() {
+                    state = dfa.transition(state, b);
+                }
+
+                if let levenshtein_automata::Distance::Exact(score) = dfa.distance(state) {
+                    if let Some(refs) = index.refs.get(key) {
+                        items.extend(refs.iter().filter_map(|i| {
+                            let archived = index.data.get(*i as usize)?;
+
+                            Some((
+                                archived.id.to_string(),
+                                Item {
+                                    archived: Some(archived),
+                                    document: None,
+                                    popularity: &archived.popularity,
+                                    score,
+                                },
+                            ))
+                        }));
+                    }
+                }
             }
+        }
 
-            if let levenshtein_automata::Distance::Exact(s) = dfa.distance(state) {
-                if let Some(refs) = index.refs.get(key) {
-                    results.extend(refs.iter().map(|r| (r, s)));
+        if let Some(index) = &exrta_index {
+            for key in index.refs.keys() {
+                let mut state = dfa.initial_state();
+
+                for &b in key.as_bytes() {
+                    state = dfa.transition(state, b);
+                }
+
+                if let levenshtein_automata::Distance::Exact(score) = dfa.distance(state) {
+                    if let Some(refs) = index.refs.get(key) {
+                        items.extend(refs.iter().filter_map(|i| {
+                            let document = index.data.get(*i as usize)?;
+
+                            Some((
+                                document.id.to_string(),
+                                Item {
+                                    archived: None,
+                                    document: Some(document.clone()),
+                                    popularity: &document.popularity,
+                                    score,
+                                },
+                            ))
+                        }));
+                    }
                 }
             }
         }
     }
 
-    let mut results_as_archived: Vec<(&ArchivedMedia, &u8)> = results
-        .iter()
-        .filter_map(|(i, s)| {
-            let archived = index.data.get(**i as usize)?;
-            Some((archived, s))
-        })
-        .collect();
+    let mut results: Vec<Item> = items.into_iter().map(|(_, item)| item).collect();
 
-    results_as_archived.sort_by(|(a_item, a_score), (b_item, b_score)| {
-        a_score
-            .cmp(b_score)
-            .then_with(|| b_item.popularity.cmp(&a_item.popularity))
+    results.sort_by(|a, b| {
+        a.score
+            .cmp(&b.score)
+            .then_with(|| b.popularity.cmp(&a.popularity))
     });
 
-    let deserialized: Vec<Media> = results_as_archived
+    let deserialized: Vec<Media> = results
         .into_iter()
         .take(25)
-        .filter_map(|(archived, _)| {
-            let item: Option<Media> = archived.deserialize(&mut Infallible).ok();
-            item
+        .filter_map(|item| {
+            if let Some(archived) = item.archived {
+                archived.deserialize(&mut Infallible).ok()
+            } else {
+                item.document
+            }
         })
         .collect();
 

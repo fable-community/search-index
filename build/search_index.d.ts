@@ -7,10 +7,11 @@
 export function create_characters_index(json: string): Uint8Array;
 /**
 * @param {string} query
-* @param {Uint8Array} index_file
+* @param {Uint8Array | undefined} [index_file]
+* @param {(Character)[] | undefined} [extra]
 * @returns {(Character)[]}
 */
-export function search_characters(query: string, index_file: Uint8Array): (Character)[];
+export function search_characters(query: string, index_file?: Uint8Array, extra?: (Character)[]): (Character)[];
 /**
 * @param {string | undefined} role
 * @param {number | undefined} popularity_lesser
@@ -27,21 +28,24 @@ export function filter_characters(role: string | undefined, popularity_lesser: n
 export function create_media_index(json: string): Uint8Array;
 /**
 * @param {string} query
-* @param {Uint8Array} index_file
+* @param {Uint8Array | undefined} [index_file]
+* @param {(Media)[] | undefined} [extra]
 * @returns {(Media)[]}
 */
-export function search_media(query: string, index_file: Uint8Array): (Media)[];
-/**
-*/
-export enum CharacterRole {
-  MAIN = 0,
-  SUPPORTING = 1,
-  BACKGROUND = 2,
-}
+export function search_media(query: string, index_file?: Uint8Array, extra?: (Media)[]): (Media)[];
 /**
 */
 export class Character {
   free(): void;
+/**
+* @param {string} id
+* @param {(string)[]} name
+* @param {(string)[]} media_title
+* @param {number} popularity
+* @param {number} rating
+* @param {string} role
+*/
+  constructor(id: string, name: (string)[], media_title: (string)[], popularity: number, rating: number, role: string);
 /**
 */
   id: string;
@@ -59,12 +63,18 @@ export class Character {
   rating: number;
 /**
 */
-  role: CharacterRole;
+  role: string;
 }
 /**
 */
 export class Media {
   free(): void;
+/**
+* @param {string} id
+* @param {(string)[]} title
+* @param {number} popularity
+*/
+  constructor(id: string, title: (string)[], popularity: number);
 /**
 */
   id: string;

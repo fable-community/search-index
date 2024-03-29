@@ -174,17 +174,20 @@ function passArray8ToWasm0(arg, malloc) {
 }
 /**
 * @param {string} query
-* @param {Uint8Array} index_file
+* @param {Uint8Array | undefined} [index_file]
+* @param {(Character)[] | undefined} [extra]
 * @returns {(Character)[]}
 */
-export function search_characters(query, index_file) {
+export function search_characters(query, index_file, extra) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passStringToWasm0(query, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
         const len0 = WASM_VECTOR_LEN;
-        const ptr1 = passArray8ToWasm0(index_file, wasm.__wbindgen_export_0);
-        const len1 = WASM_VECTOR_LEN;
-        wasm.search_characters(retptr, ptr0, len0, ptr1, len1);
+        var ptr1 = isLikeNone(index_file) ? 0 : passArray8ToWasm0(index_file, wasm.__wbindgen_export_0);
+        var len1 = WASM_VECTOR_LEN;
+        var ptr2 = isLikeNone(extra) ? 0 : passArrayJsValueToWasm0(extra, wasm.__wbindgen_export_0);
+        var len2 = WASM_VECTOR_LEN;
+        wasm.search_characters(retptr, ptr0, len0, ptr1, len1, ptr2, len2);
         var r0 = getInt32Memory0()[retptr / 4 + 0];
         var r1 = getInt32Memory0()[retptr / 4 + 1];
         var r2 = getInt32Memory0()[retptr / 4 + 2];
@@ -192,9 +195,9 @@ export function search_characters(query, index_file) {
         if (r3) {
             throw takeObject(r2);
         }
-        var v3 = getArrayJsValueFromWasm0(r0, r1).slice();
+        var v4 = getArrayJsValueFromWasm0(r0, r1).slice();
         wasm.__wbindgen_export_2(r0, r1 * 4, 4);
-        return v3;
+        return v4;
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
     }
@@ -258,17 +261,20 @@ export function create_media_index(json) {
 
 /**
 * @param {string} query
-* @param {Uint8Array} index_file
+* @param {Uint8Array | undefined} [index_file]
+* @param {(Media)[] | undefined} [extra]
 * @returns {(Media)[]}
 */
-export function search_media(query, index_file) {
+export function search_media(query, index_file, extra) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passStringToWasm0(query, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
         const len0 = WASM_VECTOR_LEN;
-        const ptr1 = passArray8ToWasm0(index_file, wasm.__wbindgen_export_0);
-        const len1 = WASM_VECTOR_LEN;
-        wasm.search_media(retptr, ptr0, len0, ptr1, len1);
+        var ptr1 = isLikeNone(index_file) ? 0 : passArray8ToWasm0(index_file, wasm.__wbindgen_export_0);
+        var len1 = WASM_VECTOR_LEN;
+        var ptr2 = isLikeNone(extra) ? 0 : passArrayJsValueToWasm0(extra, wasm.__wbindgen_export_0);
+        var len2 = WASM_VECTOR_LEN;
+        wasm.search_media(retptr, ptr0, len0, ptr1, len1, ptr2, len2);
         var r0 = getInt32Memory0()[retptr / 4 + 0];
         var r1 = getInt32Memory0()[retptr / 4 + 1];
         var r2 = getInt32Memory0()[retptr / 4 + 2];
@@ -276,17 +282,13 @@ export function search_media(query, index_file) {
         if (r3) {
             throw takeObject(r2);
         }
-        var v3 = getArrayJsValueFromWasm0(r0, r1).slice();
+        var v4 = getArrayJsValueFromWasm0(r0, r1).slice();
         wasm.__wbindgen_export_2(r0, r1 * 4, 4);
-        return v3;
+        return v4;
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
     }
 }
-
-/**
-*/
-export const CharacterRole = Object.freeze({ MAIN:0,"0":"MAIN",SUPPORTING:1,"1":"SUPPORTING",BACKGROUND:2,"2":"BACKGROUND", });
 
 const CharacterFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
@@ -301,6 +303,13 @@ export class Character {
         obj.__wbg_ptr = ptr;
         CharacterFinalization.register(obj, obj.__wbg_ptr, obj);
         return obj;
+    }
+
+    static __unwrap(jsValue) {
+        if (!(jsValue instanceof Character)) {
+            return 0;
+        }
+        return jsValue.__destroy_into_raw();
     }
 
     __destroy_into_raw() {
@@ -416,17 +425,52 @@ export class Character {
         wasm.__wbg_set_character_rating(this.__wbg_ptr, arg0);
     }
     /**
-    * @returns {CharacterRole}
+    * @returns {string}
     */
     get role() {
-        const ret = wasm.__wbg_get_character_role(this.__wbg_ptr);
-        return ret;
+        let deferred1_0;
+        let deferred1_1;
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.__wbg_get_character_role(retptr, this.__wbg_ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            deferred1_0 = r0;
+            deferred1_1 = r1;
+            return getStringFromWasm0(r0, r1);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+            wasm.__wbindgen_export_2(deferred1_0, deferred1_1, 1);
+        }
     }
     /**
-    * @param {CharacterRole} arg0
+    * @param {string} arg0
     */
     set role(arg0) {
-        wasm.__wbg_set_character_role(this.__wbg_ptr, arg0);
+        const ptr0 = passStringToWasm0(arg0, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.__wbg_set_character_role(this.__wbg_ptr, ptr0, len0);
+    }
+    /**
+    * @param {string} id
+    * @param {(string)[]} name
+    * @param {(string)[]} media_title
+    * @param {number} popularity
+    * @param {number} rating
+    * @param {string} role
+    */
+    constructor(id, name, media_title, popularity, rating, role) {
+        const ptr0 = passStringToWasm0(id, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
+        const len0 = WASM_VECTOR_LEN;
+        const ptr1 = passArrayJsValueToWasm0(name, wasm.__wbindgen_export_0);
+        const len1 = WASM_VECTOR_LEN;
+        const ptr2 = passArrayJsValueToWasm0(media_title, wasm.__wbindgen_export_0);
+        const len2 = WASM_VECTOR_LEN;
+        const ptr3 = passStringToWasm0(role, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
+        const len3 = WASM_VECTOR_LEN;
+        const ret = wasm.character_create(ptr0, len0, ptr1, len1, ptr2, len2, popularity, rating, ptr3, len3);
+        this.__wbg_ptr = ret >>> 0;
+        return this;
     }
 }
 
@@ -443,6 +487,13 @@ export class Media {
         obj.__wbg_ptr = ptr;
         MediaFinalization.register(obj, obj.__wbg_ptr, obj);
         return obj;
+    }
+
+    static __unwrap(jsValue) {
+        if (!(jsValue instanceof Media)) {
+            return 0;
+        }
+        return jsValue.__destroy_into_raw();
     }
 
     __destroy_into_raw() {
@@ -520,6 +571,20 @@ export class Media {
     set popularity(arg0) {
         wasm.__wbg_set_media_popularity(this.__wbg_ptr, arg0);
     }
+    /**
+    * @param {string} id
+    * @param {(string)[]} title
+    * @param {number} popularity
+    */
+    constructor(id, title, popularity) {
+        const ptr0 = passStringToWasm0(id, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
+        const len0 = WASM_VECTOR_LEN;
+        const ptr1 = passArrayJsValueToWasm0(title, wasm.__wbindgen_export_0);
+        const len1 = WASM_VECTOR_LEN;
+        const ret = wasm.media_create(ptr0, len0, ptr1, len1, popularity);
+        this.__wbg_ptr = ret >>> 0;
+        return this;
+    }
 }
 
 const imports = {
@@ -531,6 +596,14 @@ const imports = {
         __wbindgen_error_new: function(arg0, arg1) {
             const ret = new Error(getStringFromWasm0(arg0, arg1));
             return addHeapObject(ret);
+        },
+        __wbg_character_unwrap: function(arg0) {
+            const ret = Character.__unwrap(takeObject(arg0));
+            return ret;
+        },
+        __wbg_media_unwrap: function(arg0) {
+            const ret = Media.__unwrap(takeObject(arg0));
+            return ret;
         },
         __wbg_media_new: function(arg0) {
             const ret = Media.__wrap(arg0);
