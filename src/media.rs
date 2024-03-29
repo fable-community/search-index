@@ -83,19 +83,16 @@ pub fn search_media(
 
                 if let levenshtein_automata::Distance::Exact(score) = dfa.distance(state) {
                     if let Some(refs) = index.refs.get(key) {
-                        items.extend(refs.iter().filter_map(|i| {
-                            let archived = index.data.get(*i as usize)?;
+                        for r in refs.iter() {
+                            let archived = index.data.get(*r as usize).unwrap();
 
-                            Some((
-                                archived.id.to_string(),
-                                Item {
-                                    archived: Some(archived),
-                                    document: None,
-                                    popularity: &archived.popularity,
-                                    score,
-                                },
-                            ))
-                        }));
+                            items.entry(archived.id.to_string()).or_insert(Item {
+                                archived: Some(archived),
+                                document: None,
+                                popularity: &archived.popularity,
+                                score,
+                            });
+                        }
                     }
                 }
             }
@@ -111,19 +108,16 @@ pub fn search_media(
 
                 if let levenshtein_automata::Distance::Exact(score) = dfa.distance(state) {
                     if let Some(refs) = index.refs.get(key) {
-                        items.extend(refs.iter().filter_map(|i| {
-                            let document = index.data.get(*i as usize)?;
+                        for r in refs.iter() {
+                            let document = index.data.get(*r as usize).unwrap();
 
-                            Some((
-                                document.id.to_string(),
-                                Item {
-                                    archived: None,
-                                    document: Some(document.clone()),
-                                    popularity: &document.popularity,
-                                    score,
-                                },
-                            ))
-                        }));
+                            items.entry(document.id.clone()).or_insert(Item {
+                                archived: None,
+                                document: Some(document.clone()),
+                                popularity: &document.popularity,
+                                score,
+                            });
+                        }
                     }
                 }
             }
