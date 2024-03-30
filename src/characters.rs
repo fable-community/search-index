@@ -183,7 +183,7 @@ macro_rules! filter_characters {
         }
 
         if let Some(popularity_greater) = $popularity_greater {
-            if $character.popularity < popularity_greater {
+            if $character.popularity > popularity_greater {
                 return None;
             }
         }
