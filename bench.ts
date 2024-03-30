@@ -2,14 +2,14 @@ import * as search from './build/search_index.js';
 
 console.time('elapsed');
 
-const charactersIndex = await Deno.readFile('./characters_index.bin');
-const results = search.search_characters('aqua', charactersIndex)
-  .map((t) => ({
-    name: t.name,
-    mediaTitle: t.mediaTitle,
-    popularity: t.popularity,
-  }));
-console.log(results.slice(0, 10));
+// const charactersIndex = await Deno.readFile('./characters_index.bin');
+// const results = search.search_characters('aqua', charactersIndex)
+//   .map((t) => ({
+//     name: t.name,
+//     mediaTitle: t.mediaTitle,
+//     popularity: t.popularity,
+//   }));
+// console.log(results.slice(0, 10));
 
 // const charactersIndex = await Deno.readFile('./characters_index.bin');
 // const results = search.search_characters('gura', charactersIndex, [
@@ -37,20 +37,21 @@ console.log(results.slice(0, 10));
 //   }));
 // console.log(results2.slice(0, 3));
 
-// const charactersIndex = await Deno.readFile('./characters_index.bin');
-// const results = search.filter_characters(
-//   undefined,
-//   500_000,
-//   510_000,
-//   5,
-//   charactersIndex,
-// )
-//   .map((t) => ({
-//     name: t.name,
-//     mediaTitle: t.mediaTitle,
-//     popularity: t.popularity,
-//   }));
-// console.log(results.slice(0, 3));
+const charactersIndex = await Deno.readFile('./characters_index.bin');
+const results = search.filter_characters(
+  charactersIndex,
+  undefined,
+  undefined,
+  1000,
+  50_000,
+  undefined,
+)
+  .map((t) => ({
+    name: t.name,
+    mediaTitle: t.mediaTitle,
+    popularity: t.popularity,
+  }));
+console.log(results.slice(0, 3));
 
 console.timeEnd('elapsed');
 
