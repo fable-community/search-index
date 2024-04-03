@@ -95,11 +95,14 @@ pub fn search_media(
                                 document: None,
                                 popularity: &archived.popularity,
                                 tokens_matched: 0,
-                                score: 0,
+                                score,
                             });
 
-                            item.tokens_matched += 1;
-                            item.score += score;
+                            if score == 0 {
+                                item.tokens_matched += 1;
+                            }
+
+                            item.score = item.score.min(score);
                         }
                     }
                 }
@@ -126,11 +129,14 @@ pub fn search_media(
                                 document: Some(document.clone()),
                                 popularity: &document.popularity,
                                 tokens_matched: 0,
-                                score: 0,
+                                score,
                             });
 
-                            item.tokens_matched += 1;
-                            item.score += score;
+                            if score == 0 {
+                                item.tokens_matched += 1;
+                            }
+
+                            item.score = item.score.min(score);
                         }
                     }
                 }
