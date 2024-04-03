@@ -1,4 +1,4 @@
-use crate::{create, tokenizer, Fields, Index, Insert};
+use crate::{create, tokenizer, Fields, Index};
 use hashbrown::HashMap;
 use rkyv::{Deserialize, Infallible};
 use wasm_bindgen::prelude::*;
@@ -17,6 +17,7 @@ struct Item<'a> {
     archived: Option<&'a ArchivedMedia>,
     document: Option<Media>,
     popularity: &'a u32,
+    tokens_matched: u8,
     score: u8,
 }
 
@@ -52,6 +53,8 @@ pub fn search_media(
 ) -> Result<Vec<Media>, JsError> {
     let tokens = tokenizer(query.to_string());
 
+    let lev_automaton_builder = levenshtein_automata::LevenshteinAutomatonBuilder::new(1, true);
+
     let index = index_file
         .as_ref()
         .map(|index_file| unsafe { rkyv::archived_root::<Index<Media>>(index_file) });
@@ -66,15 +69,16 @@ pub fn search_media(
         index
     });
 
-    let lev_automaton_builder = levenshtein_automata::LevenshteinAutomatonBuilder::new(1, true);
-
     let mut items = HashMap::<String, Item>::new();
 
-    for token in &tokens {
-        let dfa = lev_automaton_builder.build_dfa(&token);
+    let dias: Vec<_> = tokens
+        .iter()
+        .map(|token| lev_automaton_builder.build_dfa(token))
+        .collect();
 
-        if let Some(index) = index {
-            for key in index.refs.keys() {
+    if let Some(index) = index {
+        for key in index.refs.keys() {
+            for dfa in &dias {
                 let mut state = dfa.initial_state();
 
                 for &b in key.as_bytes() {
@@ -86,20 +90,26 @@ pub fn search_media(
                         for r in refs.iter() {
                             let archived = index.data.get(*r as usize).unwrap();
 
-                            items.entry(archived.id.to_string()).or_insert(Item {
+                            let item = items.entry(archived.id.to_string()).or_insert(Item {
                                 archived: Some(archived),
                                 document: None,
                                 popularity: &archived.popularity,
-                                score,
+                                tokens_matched: 0,
+                                score: 0,
                             });
+
+                            item.tokens_matched += 1;
+                            item.score += score;
                         }
                     }
                 }
             }
         }
+    }
 
-        if let Some(index) = &exrta_index {
-            for key in index.refs.keys() {
+    if let Some(index) = &exrta_index {
+        for key in index.refs.keys() {
+            for dfa in &dias {
                 let mut state = dfa.initial_state();
 
                 for &b in key.as_bytes() {
@@ -111,12 +121,16 @@ pub fn search_media(
                         for r in refs.iter() {
                             let document = index.data.get(*r as usize).unwrap();
 
-                            items.entry(document.id.clone()).or_insert(Item {
+                            let item = items.entry(document.id.clone()).or_insert(Item {
                                 archived: None,
                                 document: Some(document.clone()),
                                 popularity: &document.popularity,
-                                score,
+                                tokens_matched: 0,
+                                score: 0,
                             });
+
+                            item.tokens_matched += 1;
+                            item.score += score;
                         }
                     }
                 }
@@ -127,9 +141,10 @@ pub fn search_media(
     let mut results: Vec<Item> = items.into_iter().map(|(_, item)| item).collect();
 
     results.sort_by(|a, b| {
-        a.score
-            .cmp(&b.score)
-            .then_with(|| b.popularity.cmp(&a.popularity))
+        b.tokens_matched
+            .cmp(&a.tokens_matched)
+            .then_with(|| a.score.cmp(&b.score))
+            .then_with(|| b.popularity.cmp(a.popularity))
     });
 
     let deserialized: Vec<Media> = results

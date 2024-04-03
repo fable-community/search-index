@@ -12,7 +12,7 @@ extern "C" {
 
 #[macro_export]
 macro_rules! console_log {
-    ($($t:tt)*) => (crate::log(&format_args!($($t)*).to_string()))
+    ($($t:tt)*) => ($crate::log(&format_args!($($t)*).to_string()))
 }
 
 pub(crate) fn normalize_text(text: &str) -> String {
@@ -34,24 +34,18 @@ pub(crate) trait Fields {
     fn fields(&self) -> Vec<String>;
 }
 
-pub(crate) trait Insert<T> {
-    fn insert(&mut self, item: &T);
-}
-
-impl<T> Index<T> {
+impl<T> Index<T>
+where
+    T: Fields + Clone,
+{
     pub(crate) fn default() -> Self {
         Self {
             refs: HashMap::default(),
             data: Vec::default(),
         }
     }
-}
 
-impl<T> Insert<T> for Index<T>
-where
-    T: Fields + Clone,
-{
-    fn insert(&mut self, item: &T) -> () {
+    fn insert(&mut self, item: &T) {
         let i = self.data.len();
 
         let combined = item.fields();
@@ -73,8 +67,8 @@ where
 
 pub(crate) fn create<T>(items: Vec<T>) -> Result<Vec<u8>, JsError>
 where
-    Index<T>: Insert<T>,
-    T: Clone
+    T: Fields
+        + Clone
         + rkyv::Serialize<
             rkyv::ser::serializers::CompositeSerializer<
                 rkyv::ser::serializers::AlignedSerializer<rkyv::AlignedVec>,
