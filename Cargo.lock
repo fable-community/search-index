@@ -256,7 +256,7 @@ checksum = "1c107b6f4780854c8b126e228ea8869f4d7b71260f962fefb57b996b8959ba6b"
 
 [[package]]
 name = "search-index"
-version = "0.2.3"
+version = "0.2.4"
 dependencies = [
  "console_error_panic_hook",
  "hashbrown 0.14.3",

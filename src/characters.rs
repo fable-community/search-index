@@ -10,7 +10,7 @@ pub struct Character {
     pub id: String,
     #[serde(rename = "mediaId")]
     #[wasm_bindgen(getter_with_clone, js_name = mediaId)]
-    pub media_id: String,
+    pub media_id: Option<String>,
     #[wasm_bindgen(getter_with_clone)]
     pub name: Vec<String>,
     #[serde(rename = "mediaTitle")]
@@ -19,7 +19,7 @@ pub struct Character {
     pub popularity: u32,
     pub rating: u32,
     #[wasm_bindgen(getter_with_clone)]
-    pub role: String,
+    pub role: Option<String>,
 }
 
 struct Item<'a> {
@@ -41,12 +41,12 @@ impl Character {
     #[wasm_bindgen(constructor)]
     pub fn create(
         id: String,
-        media_id: String,
+        media_id: Option<String>,
         name: Vec<String>,
         media_title: Vec<String>,
         popularity: u32,
         rating: u32,
-        role: String,
+        role: Option<String>,
     ) -> Character {
         Character {
             id,
@@ -191,6 +191,10 @@ pub fn search_characters(
 
 macro_rules! filter_characters {
     ($character:expr, $rating:expr, $popularity_lesser:expr, $popularity_greater:expr, $role:expr) => {
+        if ($character.media_id.is_none()) {
+            return None;
+        }
+
         if let Some(rating) = $rating {
             if $character.rating != rating {
                 return None;
@@ -210,7 +214,11 @@ macro_rules! filter_characters {
         }
 
         if let Some(role) = &$role {
-            if &$character.role.to_string() != role {
+            if let Some(character_role) = $character.role.as_ref() {
+                if character_role != role {
+                    return None;
+                }
+            } else {
                 return None;
             }
         }

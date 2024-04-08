@@ -1,6 +1,6 @@
 [package]
 name = "search-index"
-version = "0.2.3"
+version = "0.2.4"
 edition = "2021"
 
 [package.metadata.wasm-pack.profile.release]

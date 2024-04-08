@@ -1,6 +1,6 @@
 {
   "name": "@fable-community/search-index",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Used in Fable for fast fuzzy searching",
   "main": "build/search_index.js",
   "files": [

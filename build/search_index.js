@@ -354,30 +354,30 @@ export class Character {
         wasm.__wbg_set_character_id(this.__wbg_ptr, ptr0, len0);
     }
     /**
-    * @returns {string}
+    * @returns {string | undefined}
     */
     get mediaId() {
-        let deferred1_0;
-        let deferred1_1;
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
             wasm.__wbg_get_character_mediaId(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
-            deferred1_0 = r0;
-            deferred1_1 = r1;
-            return getStringFromWasm0(r0, r1);
+            let v1;
+            if (r0 !== 0) {
+                v1 = getStringFromWasm0(r0, r1).slice();
+                wasm.__wbindgen_export_2(r0, r1 * 1, 1);
+            }
+            return v1;
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
-            wasm.__wbindgen_export_2(deferred1_0, deferred1_1, 1);
         }
     }
     /**
-    * @param {string} arg0
+    * @param {string | undefined} [arg0]
     */
     set mediaId(arg0) {
-        const ptr0 = passStringToWasm0(arg0, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
-        const len0 = WASM_VECTOR_LEN;
+        var ptr0 = isLikeNone(arg0) ? 0 : passStringToWasm0(arg0, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
+        var len0 = WASM_VECTOR_LEN;
         wasm.__wbg_set_character_mediaId(this.__wbg_ptr, ptr0, len0);
     }
     /**
@@ -455,52 +455,52 @@ export class Character {
         wasm.__wbg_set_character_rating(this.__wbg_ptr, arg0);
     }
     /**
-    * @returns {string}
+    * @returns {string | undefined}
     */
     get role() {
-        let deferred1_0;
-        let deferred1_1;
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
             wasm.__wbg_get_character_role(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
-            deferred1_0 = r0;
-            deferred1_1 = r1;
-            return getStringFromWasm0(r0, r1);
+            let v1;
+            if (r0 !== 0) {
+                v1 = getStringFromWasm0(r0, r1).slice();
+                wasm.__wbindgen_export_2(r0, r1 * 1, 1);
+            }
+            return v1;
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
-            wasm.__wbindgen_export_2(deferred1_0, deferred1_1, 1);
         }
     }
     /**
-    * @param {string} arg0
+    * @param {string | undefined} [arg0]
     */
     set role(arg0) {
-        const ptr0 = passStringToWasm0(arg0, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
-        const len0 = WASM_VECTOR_LEN;
+        var ptr0 = isLikeNone(arg0) ? 0 : passStringToWasm0(arg0, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
+        var len0 = WASM_VECTOR_LEN;
         wasm.__wbg_set_character_role(this.__wbg_ptr, ptr0, len0);
     }
     /**
     * @param {string} id
-    * @param {string} media_id
+    * @param {string | undefined} media_id
     * @param {(string)[]} name
     * @param {(string)[]} media_title
     * @param {number} popularity
     * @param {number} rating
-    * @param {string} role
+    * @param {string | undefined} [role]
     */
     constructor(id, media_id, name, media_title, popularity, rating, role) {
         const ptr0 = passStringToWasm0(id, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
         const len0 = WASM_VECTOR_LEN;
-        const ptr1 = passStringToWasm0(media_id, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
-        const len1 = WASM_VECTOR_LEN;
+        var ptr1 = isLikeNone(media_id) ? 0 : passStringToWasm0(media_id, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
+        var len1 = WASM_VECTOR_LEN;
         const ptr2 = passArrayJsValueToWasm0(name, wasm.__wbindgen_export_0);
         const len2 = WASM_VECTOR_LEN;
         const ptr3 = passArrayJsValueToWasm0(media_title, wasm.__wbindgen_export_0);
         const len3 = WASM_VECTOR_LEN;
-        const ptr4 = passStringToWasm0(role, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
-        const len4 = WASM_VECTOR_LEN;
+        var ptr4 = isLikeNone(role) ? 0 : passStringToWasm0(role, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
+        var len4 = WASM_VECTOR_LEN;
         const ret = wasm.character_create(ptr0, len0, ptr1, len1, ptr2, len2, ptr3, len3, popularity, rating, ptr4, len4);
         this.__wbg_ptr = ret >>> 0;
         return this;
@@ -573,7 +573,7 @@ export class Media {
     get title() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_media_title(retptr, this.__wbg_ptr);
+            wasm.__wbg_get_character_name(retptr, this.__wbg_ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             var v1 = getArrayJsValueFromWasm0(r0, r1).slice();
@@ -589,7 +589,7 @@ export class Media {
     set title(arg0) {
         const ptr0 = passArrayJsValueToWasm0(arg0, wasm.__wbindgen_export_0);
         const len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_media_title(this.__wbg_ptr, ptr0, len0);
+        wasm.__wbg_set_character_name(this.__wbg_ptr, ptr0, len0);
     }
     /**
     * @returns {number}
