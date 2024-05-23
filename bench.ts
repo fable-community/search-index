@@ -47,20 +47,16 @@ console.log(results.slice(0, 1));
 //   }));
 // console.log(results2.slice(0, 3));
 
-// const charactersIndex = await Deno.readFile('./characters_index.bin');
-// const results = search.filter_characters(
-//   charactersIndex,
-//   undefined,
-//   undefined,
-//   1000,
-//   50_000,
-//   undefined,
-// )
-//   .map((t) => ({
-//     name: t.name,
-//     mediaTitle: t.mediaTitle,
-//     popularity: t.popularity,
-//   }));
+const results3 = search.filter_characters(
+  charactersIndex,
+  undefined,
+  undefined,
+  1000,
+  50_000,
+  undefined,
+);
+
+console.log(Array.from(results3.entries()).slice(0, 3));
 
 console.timeEnd('elapsed');
 

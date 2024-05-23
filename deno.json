@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "build": "wasm-pack build --target deno --out-dir build",
+    "build": "wasm-pack build --target nodejs --out-dir build",
     "watch": "cargo watch -w src/lib.rs -s \"deno task build\"",
     "start": "deno run --watch -A mod.ts"
   },

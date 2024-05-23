@@ -1,8 +1,31 @@
+let imports = {};
+imports['__wbindgen_placeholder__'] = module.exports;
+let wasm;
+const { TextDecoder, TextEncoder } = require(`util`);
 
+const heap = new Array(128).fill(undefined);
 
-const cachedTextDecoder = (typeof TextDecoder !== 'undefined' ? new TextDecoder('utf-8', { ignoreBOM: true, fatal: true }) : { decode: () => { throw Error('TextDecoder not available') } } );
+heap.push(undefined, null, true, false);
 
-if (typeof TextDecoder !== 'undefined') { cachedTextDecoder.decode(); };
+function getObject(idx) { return heap[idx]; }
+
+let heap_next = heap.length;
+
+function dropObject(idx) {
+    if (idx < 132) return;
+    heap[idx] = heap_next;
+    heap_next = idx;
+}
+
+function takeObject(idx) {
+    const ret = getObject(idx);
+    dropObject(idx);
+    return ret;
+}
+
+let cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });
+
+cachedTextDecoder.decode();
 
 let cachedUint8Memory0 = null;
 
@@ -18,12 +41,6 @@ function getStringFromWasm0(ptr, len) {
     return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
 }
 
-const heap = new Array(128).fill(undefined);
-
-heap.push(undefined, null, true, false);
-
-let heap_next = heap.length;
-
 function addHeapObject(obj) {
     if (heap_next === heap.length) heap.push(heap.length + 1);
     const idx = heap_next;
@@ -33,15 +50,87 @@ function addHeapObject(obj) {
     return idx;
 }
 
-function getObject(idx) { return heap[idx]; }
+function debugString(val) {
+    // primitive types
+    const type = typeof val;
+    if (type == 'number' || type == 'boolean' || val == null) {
+        return  `${val}`;
+    }
+    if (type == 'string') {
+        return `"${val}"`;
+    }
+    if (type == 'symbol') {
+        const description = val.description;
+        if (description == null) {
+            return 'Symbol';
+        } else {
+            return `Symbol(${description})`;
+        }
+    }
+    if (type == 'function') {
+        const name = val.name;
+        if (typeof name == 'string' && name.length > 0) {
+            return `Function(${name})`;
+        } else {
+            return 'Function';
+        }
+    }
+    // objects
+    if (Array.isArray(val)) {
+        const length = val.length;
+        let debug = '[';
+        if (length > 0) {
+            debug += debugString(val[0]);
+        }
+        for(let i = 1; i < length; i++) {
+            debug += ', ' + debugString(val[i]);
+        }
+        debug += ']';
+        return debug;
+    }
+    // Test for built-in
+    const builtInMatches = /\[object ([^\]]+)\]/.exec(toString.call(val));
+    let className;
+    if (builtInMatches.length > 1) {
+        className = builtInMatches[1];
+    } else {
+        // Failed to match the standard '[object ClassName]'
+        return toString.call(val);
+    }
+    if (className == 'Object') {
+        // we're a user defined class or Object
+        // JSON.stringify avoids problems with cycles, and is generally much
+        // easier than looping through ownProperties of `val`.
+        try {
+            return 'Object(' + JSON.stringify(val) + ')';
+        } catch (_) {
+            return 'Object';
+        }
+    }
+    // errors
+    if (val instanceof Error) {
+        return `${val.name}: ${val.message}\n${val.stack}`;
+    }
+    // TODO we could test for more things here, like `Set`s and `Map`s.
+    return className;
+}
 
 let WASM_VECTOR_LEN = 0;
 
-const cachedTextEncoder = (typeof TextEncoder !== 'undefined' ? new TextEncoder('utf-8') : { encode: () => { throw Error('TextEncoder not available') } } );
+let cachedTextEncoder = new TextEncoder('utf-8');
 
-const encodeString = function (arg, view) {
+const encodeString = (typeof cachedTextEncoder.encodeInto === 'function'
+    ? function (arg, view) {
     return cachedTextEncoder.encodeInto(arg, view);
-};
+}
+    : function (arg, view) {
+    const buf = cachedTextEncoder.encode(arg);
+    view.set(buf);
+    return {
+        read: arg.length,
+        written: buf.length
+    };
+});
 
 function passStringToWasm0(arg, malloc, realloc) {
 
@@ -82,10 +171,6 @@ function passStringToWasm0(arg, malloc, realloc) {
     return ptr;
 }
 
-function isLikeNone(x) {
-    return x === undefined || x === null;
-}
-
 let cachedInt32Memory0 = null;
 
 function getInt32Memory0() {
@@ -95,16 +180,8 @@ function getInt32Memory0() {
     return cachedInt32Memory0;
 }
 
-function dropObject(idx) {
-    if (idx < 132) return;
-    heap[idx] = heap_next;
-    heap_next = idx;
-}
-
-function takeObject(idx) {
-    const ret = getObject(idx);
-    dropObject(idx);
-    return ret;
+function isLikeNone(x) {
+    return x === undefined || x === null;
 }
 
 let cachedUint32Memory0 = null;
@@ -145,7 +222,7 @@ function getArrayU8FromWasm0(ptr, len) {
 * @param {string} json
 * @returns {Uint8Array}
 */
-export function create_characters_index(json) {
+module.exports.create_characters_index = function(json) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passStringToWasm0(json, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
@@ -164,7 +241,7 @@ export function create_characters_index(json) {
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
     }
-}
+};
 
 function passArray8ToWasm0(arg, malloc) {
     const ptr = malloc(arg.length * 1, 1) >>> 0;
@@ -178,7 +255,7 @@ function passArray8ToWasm0(arg, malloc) {
 * @param {(Character)[] | undefined} [extra]
 * @returns {(Character)[]}
 */
-export function search_characters(query, index_file, extra) {
+module.exports.search_characters = function(query, index_file, extra) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passStringToWasm0(query, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
@@ -201,7 +278,7 @@ export function search_characters(query, index_file, extra) {
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
     }
-}
+};
 
 /**
 * @param {Uint8Array | undefined} [index_file]
@@ -210,9 +287,9 @@ export function search_characters(query, index_file, extra) {
 * @param {number | undefined} [popularity_lesser]
 * @param {number | undefined} [popularity_greater]
 * @param {number | undefined} [rating]
-* @returns {(Character)[]}
+* @returns {Map<any, any>}
 */
-export function filter_characters(index_file, extra, role, popularity_lesser, popularity_greater, rating) {
+module.exports.filter_characters = function(index_file, extra, role, popularity_lesser, popularity_greater, rating) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         var ptr0 = isLikeNone(index_file) ? 0 : passArray8ToWasm0(index_file, wasm.__wbindgen_export_0);
@@ -225,23 +302,20 @@ export function filter_characters(index_file, extra, role, popularity_lesser, po
         var r0 = getInt32Memory0()[retptr / 4 + 0];
         var r1 = getInt32Memory0()[retptr / 4 + 1];
         var r2 = getInt32Memory0()[retptr / 4 + 2];
-        var r3 = getInt32Memory0()[retptr / 4 + 3];
-        if (r3) {
-            throw takeObject(r2);
+        if (r2) {
+            throw takeObject(r1);
         }
-        var v4 = getArrayJsValueFromWasm0(r0, r1).slice();
-        wasm.__wbindgen_export_2(r0, r1 * 4, 4);
-        return v4;
+        return takeObject(r0);
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
     }
-}
+};
 
 /**
 * @param {string} json
 * @returns {Uint8Array}
 */
-export function create_media_index(json) {
+module.exports.create_media_index = function(json) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passStringToWasm0(json, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
@@ -260,7 +334,7 @@ export function create_media_index(json) {
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
     }
-}
+};
 
 /**
 * @param {string} query
@@ -268,7 +342,7 @@ export function create_media_index(json) {
 * @param {(Media)[] | undefined} [extra]
 * @returns {(Media)[]}
 */
-export function search_media(query, index_file, extra) {
+module.exports.search_media = function(query, index_file, extra) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passStringToWasm0(query, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
@@ -291,14 +365,14 @@ export function search_media(query, index_file, extra) {
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
     }
-}
+};
 
 const CharacterFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_character_free(ptr >>> 0));
 /**
 */
-export class Character {
+class Character {
 
     static __wrap(ptr) {
         ptr = ptr >>> 0;
@@ -506,13 +580,14 @@ export class Character {
         return this;
     }
 }
+module.exports.Character = Character;
 
 const MediaFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_media_free(ptr >>> 0));
 /**
 */
-export class Media {
+class Media {
 
     static __wrap(ptr) {
         ptr = ptr >>> 0;
@@ -619,65 +694,106 @@ export class Media {
         return this;
     }
 }
+module.exports.Media = Media;
 
-const imports = {
-    __wbindgen_placeholder__: {
-        __wbg_character_unwrap: function(arg0) {
-            const ret = Character.__unwrap(takeObject(arg0));
-            return ret;
-        },
-        __wbg_character_new: function(arg0) {
-            const ret = Character.__wrap(arg0);
-            return addHeapObject(ret);
-        },
-        __wbindgen_error_new: function(arg0, arg1) {
-            const ret = new Error(getStringFromWasm0(arg0, arg1));
-            return addHeapObject(ret);
-        },
-        __wbg_media_unwrap: function(arg0) {
-            const ret = Media.__unwrap(takeObject(arg0));
-            return ret;
-        },
-        __wbg_media_new: function(arg0) {
-            const ret = Media.__wrap(arg0);
-            return addHeapObject(ret);
-        },
-        __wbindgen_throw: function(arg0, arg1) {
-            throw new Error(getStringFromWasm0(arg0, arg1));
-        },
-        __wbindgen_string_new: function(arg0, arg1) {
-            const ret = getStringFromWasm0(arg0, arg1);
-            return addHeapObject(ret);
-        },
-        __wbindgen_string_get: function(arg0, arg1) {
-            const obj = getObject(arg1);
-            const ret = typeof(obj) === 'string' ? obj : undefined;
-            var ptr1 = isLikeNone(ret) ? 0 : passStringToWasm0(ret, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
-            var len1 = WASM_VECTOR_LEN;
-            getInt32Memory0()[arg0 / 4 + 1] = len1;
-            getInt32Memory0()[arg0 / 4 + 0] = ptr1;
-        },
-        __wbindgen_object_drop_ref: function(arg0) {
-            takeObject(arg0);
-        },
-    },
-
+module.exports.__wbg_character_unwrap = function(arg0) {
+    const ret = Character.__unwrap(takeObject(arg0));
+    return ret;
 };
 
-const wasm_url = new URL('search_index_bg.wasm', import.meta.url);
-let wasmCode = '';
-switch (wasm_url.protocol) {
-    case 'file:':
-    wasmCode = await Deno.readFile(wasm_url);
-    break
-    case 'https:':
-    case 'http:':
-    wasmCode = await (await fetch(wasm_url)).arrayBuffer();
-    break
-    default:
-    throw new Error(`Unsupported protocol: ${wasm_url.protocol}`);
-}
+module.exports.__wbindgen_object_drop_ref = function(arg0) {
+    takeObject(arg0);
+};
 
-const wasmInstance = (await WebAssembly.instantiate(wasmCode, imports)).instance;
-const wasm = wasmInstance.exports;
+module.exports.__wbindgen_error_new = function(arg0, arg1) {
+    const ret = new Error(getStringFromWasm0(arg0, arg1));
+    return addHeapObject(ret);
+};
+
+module.exports.__wbg_new_16b304a2cfa7ff4a = function() {
+    const ret = new Array();
+    return addHeapObject(ret);
+};
+
+module.exports.__wbindgen_string_new = function(arg0, arg1) {
+    const ret = getStringFromWasm0(arg0, arg1);
+    return addHeapObject(ret);
+};
+
+module.exports.__wbg_set_d4638f722068f043 = function(arg0, arg1, arg2) {
+    getObject(arg0)[arg1 >>> 0] = takeObject(arg2);
+};
+
+module.exports.__wbg_set_f975102236d3c502 = function(arg0, arg1, arg2) {
+    getObject(arg0)[takeObject(arg1)] = takeObject(arg2);
+};
+
+module.exports.__wbg_character_new = function(arg0) {
+    const ret = Character.__wrap(arg0);
+    return addHeapObject(ret);
+};
+
+module.exports.__wbg_new_d9bc3a0147634640 = function() {
+    const ret = new Map();
+    return addHeapObject(ret);
+};
+
+module.exports.__wbg_new_72fb9a18b5ae2624 = function() {
+    const ret = new Object();
+    return addHeapObject(ret);
+};
+
+module.exports.__wbindgen_number_new = function(arg0) {
+    const ret = arg0;
+    return addHeapObject(ret);
+};
+
+module.exports.__wbg_set_8417257aaedc936b = function(arg0, arg1, arg2) {
+    const ret = getObject(arg0).set(getObject(arg1), getObject(arg2));
+    return addHeapObject(ret);
+};
+
+module.exports.__wbg_media_unwrap = function(arg0) {
+    const ret = Media.__unwrap(takeObject(arg0));
+    return ret;
+};
+
+module.exports.__wbg_media_new = function(arg0) {
+    const ret = Media.__wrap(arg0);
+    return addHeapObject(ret);
+};
+
+module.exports.__wbindgen_object_clone_ref = function(arg0) {
+    const ret = getObject(arg0);
+    return addHeapObject(ret);
+};
+
+module.exports.__wbindgen_debug_string = function(arg0, arg1) {
+    const ret = debugString(getObject(arg1));
+    const ptr1 = passStringToWasm0(ret, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
+    const len1 = WASM_VECTOR_LEN;
+    getInt32Memory0()[arg0 / 4 + 1] = len1;
+    getInt32Memory0()[arg0 / 4 + 0] = ptr1;
+};
+
+module.exports.__wbindgen_throw = function(arg0, arg1) {
+    throw new Error(getStringFromWasm0(arg0, arg1));
+};
+
+module.exports.__wbindgen_string_get = function(arg0, arg1) {
+    const obj = getObject(arg1);
+    const ret = typeof(obj) === 'string' ? obj : undefined;
+    var ptr1 = isLikeNone(ret) ? 0 : passStringToWasm0(ret, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
+    var len1 = WASM_VECTOR_LEN;
+    getInt32Memory0()[arg0 / 4 + 1] = len1;
+    getInt32Memory0()[arg0 / 4 + 0] = ptr1;
+};
+
+const path = require('path').join(__dirname, 'search_index_bg.wasm');
+const bytes = require('fs').readFileSync(path);
+
+const wasmModule = new WebAssembly.Module(bytes);
+const wasmInstance = new WebAssembly.Instance(wasmModule, imports);
+wasm = wasmInstance.exports;
+module.exports.__wasm = wasm;
 

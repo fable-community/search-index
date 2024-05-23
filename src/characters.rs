@@ -4,7 +4,9 @@ use rkyv::{Deserialize, Infallible};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, serde::Deserialize, Clone)]
+#[derive(
+    rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, serde::Serialize, serde::Deserialize, Clone,
+)]
 pub struct Character {
     #[wasm_bindgen(getter_with_clone)]
     pub id: String,
@@ -233,7 +235,7 @@ pub fn filter_characters(
     popularity_lesser: Option<u32>,
     popularity_greater: Option<u32>,
     rating: Option<u32>,
-) -> Result<Vec<Character>, JsError> {
+) -> Result<js_sys::Map, JsError> {
     let index = index_file
         .as_ref()
         .map(|index_file| unsafe { rkyv::archived_root::<Index<Character>>(index_file) });
@@ -275,5 +277,34 @@ pub fn filter_characters(
             .collect()
     });
 
-    Ok([indexed_filtered, extra_filtered].concat())
+    let mut media_id_coll: HashMap<String, Vec<Character>> = HashMap::new();
+
+    for character in indexed_filtered.iter() {
+        let media_id = character.media_id.clone().unwrap();
+
+        media_id_coll
+            .entry(media_id)
+            .or_insert(Vec::new())
+            .push(character.clone());
+    }
+
+    for character in extra_filtered.iter() {
+        let media_id = character.media_id.clone().unwrap();
+
+        media_id_coll
+            .entry(media_id)
+            .or_insert(Vec::new())
+            .push(character.clone());
+    }
+
+    let media_id_coll_js = js_sys::Map::new();
+
+    for (media_id, character) in media_id_coll.iter() {
+        media_id_coll_js.set(
+            &serde_wasm_bindgen::to_value(media_id).unwrap(),
+            &serde_wasm_bindgen::to_value(character).unwrap(),
+        );
+    }
+
+    Ok(media_id_coll_js)
 }
