@@ -235,7 +235,7 @@ pub fn filter_characters(
     popularity_lesser: Option<u32>,
     popularity_greater: Option<u32>,
     rating: Option<u32>,
-) -> Result<js_sys::Map, JsError> {
+) -> Result<Vec<Character>, JsError> {
     let index = index_file
         .as_ref()
         .map(|index_file| unsafe { rkyv::archived_root::<Index<Character>>(index_file) });
@@ -277,18 +277,30 @@ pub fn filter_characters(
             .collect()
     });
 
+    Ok([indexed_filtered, extra_filtered].concat())
+}
+
+#[wasm_bindgen]
+pub fn filter_characters_mapped(
+    index_file: Option<Vec<u8>>,
+    extra: Option<Vec<Character>>,
+    role: Option<String>,
+    popularity_lesser: Option<u32>,
+    popularity_greater: Option<u32>,
+    rating: Option<u32>,
+) -> Result<js_sys::Map, JsError> {
+    let filtered = filter_characters(
+        index_file,
+        extra,
+        role,
+        popularity_lesser,
+        popularity_greater,
+        rating,
+    )?;
+
     let mut media_id_coll: HashMap<String, Vec<Character>> = HashMap::new();
 
-    for character in indexed_filtered.iter() {
-        let media_id = character.media_id.clone().unwrap();
-
-        media_id_coll
-            .entry(media_id)
-            .or_insert(Vec::new())
-            .push(character.clone());
-    }
-
-    for character in extra_filtered.iter() {
+    for character in filtered.iter() {
         let media_id = character.media_id.clone().unwrap();
 
         media_id_coll

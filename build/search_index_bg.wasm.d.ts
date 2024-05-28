@@ -20,6 +20,7 @@ export function character_create(a: number, b: number, c: number, d: number, e: 
 export function create_characters_index(a: number, b: number, c: number): void;
 export function search_characters(a: number, b: number, c: number, d: number, e: number, f: number, g: number): void;
 export function filter_characters(a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number, l: number, m: number): void;
+export function filter_characters_mapped(a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number, l: number, m: number): void;
 export function __wbg_media_free(a: number): void;
 export function __wbg_get_media_popularity(a: number): number;
 export function __wbg_set_media_popularity(a: number, b: number): void;
