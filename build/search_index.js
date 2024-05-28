@@ -287,9 +287,9 @@ module.exports.search_characters = function(query, index_file, extra) {
 * @param {number | undefined} [popularity_lesser]
 * @param {number | undefined} [popularity_greater]
 * @param {number | undefined} [rating]
-* @returns {(Character)[]}
+* @returns {Map<any, any>}
 */
-module.exports.filter_characters = function(index_file, extra, role, popularity_lesser, popularity_greater, rating) {
+module.exports.media_mapped_filter_characters = function(index_file, extra, role, popularity_lesser, popularity_greater, rating) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         var ptr0 = isLikeNone(index_file) ? 0 : passArray8ToWasm0(index_file, wasm.__wbindgen_export_0);
@@ -298,17 +298,14 @@ module.exports.filter_characters = function(index_file, extra, role, popularity_
         var len1 = WASM_VECTOR_LEN;
         var ptr2 = isLikeNone(role) ? 0 : passStringToWasm0(role, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
         var len2 = WASM_VECTOR_LEN;
-        wasm.filter_characters(retptr, ptr0, len0, ptr1, len1, ptr2, len2, !isLikeNone(popularity_lesser), isLikeNone(popularity_lesser) ? 0 : popularity_lesser, !isLikeNone(popularity_greater), isLikeNone(popularity_greater) ? 0 : popularity_greater, !isLikeNone(rating), isLikeNone(rating) ? 0 : rating);
+        wasm.media_mapped_filter_characters(retptr, ptr0, len0, ptr1, len1, ptr2, len2, !isLikeNone(popularity_lesser), isLikeNone(popularity_lesser) ? 0 : popularity_lesser, !isLikeNone(popularity_greater), isLikeNone(popularity_greater) ? 0 : popularity_greater, !isLikeNone(rating), isLikeNone(rating) ? 0 : rating);
         var r0 = getInt32Memory0()[retptr / 4 + 0];
         var r1 = getInt32Memory0()[retptr / 4 + 1];
         var r2 = getInt32Memory0()[retptr / 4 + 2];
-        var r3 = getInt32Memory0()[retptr / 4 + 3];
-        if (r3) {
-            throw takeObject(r2);
+        if (r2) {
+            throw takeObject(r1);
         }
-        var v4 = getArrayJsValueFromWasm0(r0, r1).slice();
-        wasm.__wbindgen_export_2(r0, r1 * 4, 4);
-        return v4;
+        return takeObject(r0);
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
     }
@@ -323,7 +320,7 @@ module.exports.filter_characters = function(index_file, extra, role, popularity_
 * @param {number | undefined} [rating]
 * @returns {Map<any, any>}
 */
-module.exports.filter_characters_mapped = function(index_file, extra, role, popularity_lesser, popularity_greater, rating) {
+module.exports.id_mapped_filter_characters = function(index_file, extra, role, popularity_lesser, popularity_greater, rating) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         var ptr0 = isLikeNone(index_file) ? 0 : passArray8ToWasm0(index_file, wasm.__wbindgen_export_0);
@@ -332,7 +329,7 @@ module.exports.filter_characters_mapped = function(index_file, extra, role, popu
         var len1 = WASM_VECTOR_LEN;
         var ptr2 = isLikeNone(role) ? 0 : passStringToWasm0(role, wasm.__wbindgen_export_0, wasm.__wbindgen_export_1);
         var len2 = WASM_VECTOR_LEN;
-        wasm.filter_characters_mapped(retptr, ptr0, len0, ptr1, len1, ptr2, len2, !isLikeNone(popularity_lesser), isLikeNone(popularity_lesser) ? 0 : popularity_lesser, !isLikeNone(popularity_greater), isLikeNone(popularity_greater) ? 0 : popularity_greater, !isLikeNone(rating), isLikeNone(rating) ? 0 : rating);
+        wasm.id_mapped_filter_characters(retptr, ptr0, len0, ptr1, len1, ptr2, len2, !isLikeNone(popularity_lesser), isLikeNone(popularity_lesser) ? 0 : popularity_lesser, !isLikeNone(popularity_greater), isLikeNone(popularity_greater) ? 0 : popularity_greater, !isLikeNone(rating), isLikeNone(rating) ? 0 : rating);
         var r0 = getInt32Memory0()[retptr / 4 + 0];
         var r1 = getInt32Memory0()[retptr / 4 + 1];
         var r2 = getInt32Memory0()[retptr / 4 + 2];
@@ -735,11 +732,6 @@ module.exports.__wbg_character_unwrap = function(arg0) {
     return ret;
 };
 
-module.exports.__wbg_character_new = function(arg0) {
-    const ret = Character.__wrap(arg0);
-    return addHeapObject(ret);
-};
-
 module.exports.__wbindgen_object_drop_ref = function(arg0) {
     takeObject(arg0);
 };
@@ -767,11 +759,6 @@ module.exports.__wbg_set_f975102236d3c502 = function(arg0, arg1, arg2) {
     getObject(arg0)[takeObject(arg1)] = takeObject(arg2);
 };
 
-module.exports.__wbg_new_d9bc3a0147634640 = function() {
-    const ret = new Map();
-    return addHeapObject(ret);
-};
-
 module.exports.__wbg_new_72fb9a18b5ae2624 = function() {
     const ret = new Object();
     return addHeapObject(ret);
@@ -779,6 +766,16 @@ module.exports.__wbg_new_72fb9a18b5ae2624 = function() {
 
 module.exports.__wbindgen_number_new = function(arg0) {
     const ret = arg0;
+    return addHeapObject(ret);
+};
+
+module.exports.__wbg_character_new = function(arg0) {
+    const ret = Character.__wrap(arg0);
+    return addHeapObject(ret);
+};
+
+module.exports.__wbg_new_d9bc3a0147634640 = function() {
+    const ret = new Map();
     return addHeapObject(ret);
 };
 

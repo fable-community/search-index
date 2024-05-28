@@ -227,7 +227,6 @@ macro_rules! filter_characters {
     };
 }
 
-#[wasm_bindgen]
 pub fn filter_characters(
     index_file: Option<Vec<u8>>,
     extra: Option<Vec<Character>>,
@@ -281,7 +280,7 @@ pub fn filter_characters(
 }
 
 #[wasm_bindgen]
-pub fn filter_characters_mapped(
+pub fn media_mapped_filter_characters(
     index_file: Option<Vec<u8>>,
     extra: Option<Vec<Character>>,
     role: Option<String>,
@@ -319,4 +318,42 @@ pub fn filter_characters_mapped(
     }
 
     Ok(media_id_coll_js)
+}
+
+#[wasm_bindgen]
+pub fn id_mapped_filter_characters(
+    index_file: Option<Vec<u8>>,
+    extra: Option<Vec<Character>>,
+    role: Option<String>,
+    popularity_lesser: Option<u32>,
+    popularity_greater: Option<u32>,
+    rating: Option<u32>,
+) -> Result<js_sys::Map, JsError> {
+    let filtered = filter_characters(
+        index_file,
+        extra,
+        role,
+        popularity_lesser,
+        popularity_greater,
+        rating,
+    )?;
+
+    let mut char_id_coll: HashMap<String, Character> = HashMap::new();
+
+    for character in filtered.iter() {
+        let char_id = character.id.clone();
+
+        char_id_coll.insert(char_id, character.clone());
+    }
+
+    let char_id_coll_js = js_sys::Map::new();
+
+    for (char_id, character) in char_id_coll.iter() {
+        char_id_coll_js.set(
+            &serde_wasm_bindgen::to_value(char_id).unwrap(),
+            &serde_wasm_bindgen::to_value(character).unwrap(),
+        );
+    }
+
+    Ok(char_id_coll_js)
 }

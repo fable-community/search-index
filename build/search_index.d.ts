@@ -19,9 +19,9 @@ export function search_characters(query: string, index_file?: Uint8Array, extra?
 * @param {number | undefined} [popularity_lesser]
 * @param {number | undefined} [popularity_greater]
 * @param {number | undefined} [rating]
-* @returns {(Character)[]}
+* @returns {Map<any, any>}
 */
-export function filter_characters(index_file?: Uint8Array, extra?: (Character)[], role?: string, popularity_lesser?: number, popularity_greater?: number, rating?: number): (Character)[];
+export function media_mapped_filter_characters(index_file?: Uint8Array, extra?: (Character)[], role?: string, popularity_lesser?: number, popularity_greater?: number, rating?: number): Map<any, any>;
 /**
 * @param {Uint8Array | undefined} [index_file]
 * @param {(Character)[] | undefined} [extra]
@@ -31,7 +31,7 @@ export function filter_characters(index_file?: Uint8Array, extra?: (Character)[]
 * @param {number | undefined} [rating]
 * @returns {Map<any, any>}
 */
-export function filter_characters_mapped(index_file?: Uint8Array, extra?: (Character)[], role?: string, popularity_lesser?: number, popularity_greater?: number, rating?: number): Map<any, any>;
+export function id_mapped_filter_characters(index_file?: Uint8Array, extra?: (Character)[], role?: string, popularity_lesser?: number, popularity_greater?: number, rating?: number): Map<any, any>;
 /**
 * @param {string} json
 * @returns {Uint8Array}
