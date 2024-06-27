@@ -34,7 +34,8 @@ struct Item<'a> {
 
 impl Fields for Character {
     fn fields(&self) -> Vec<String> {
-        [self.name.clone(), self.media_title.clone()].concat()
+        [self.name.clone()].concat()
+        // [self.name.clone(), self.media_title.clone()].concat()
     }
 }
 
