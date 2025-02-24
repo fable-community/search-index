@@ -6,12 +6,8 @@
   },
   "[typescript]": {
     "editor.tabSize": 2,
-    "editor.defaultFormatter": "denoland.vscode-deno"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "deno.lint": true,
-  "deno.enable": true,
-  "deno.unstable": false,
-  "deno.config": "deno.json",
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": false,
   "files.exclude": {

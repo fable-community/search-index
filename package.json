@@ -1,15 +1,21 @@
 {
   "name": "@fable-community/search-index",
-  "version": "0.1.10",
+  "version": "0.3.0",
   "description": "Used in Fable to speed up fuzzy searching",
   "main": "build/search_index.js",
   "files": [
     "build/search_index.js",
+    "build/search_index_bg.js",
     "build/search_index.d.ts",
     "build/search_index_bg.wasm",
+    "build/search_index_bg.wasm.d.ts",
     "README.md",
     "LICENSE"
   ],
+  "scripts": {
+    "build": "wasm-pack build --target bundler --out-dir build",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fable-community/search-index.git"
@@ -20,5 +26,9 @@
   "bugs": {
     "url": "https://github.com/fable-community/search-index/issues"
   },
-  "homepage": "https://github.com/fable-community/search-index#readme"
+  "homepage": "https://github.com/fable-community/search-index#readme",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "wasm-pack": "^0.13.1"
+  }
 }
