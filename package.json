@@ -28,7 +28,6 @@
   },
   "homepage": "https://github.com/fable-community/search-index#readme",
   "devDependencies": {
-    "jest": "^29.7.0",
     "wasm-pack": "^0.13.1"
   }
 }
