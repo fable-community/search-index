@@ -1,9 +1,8 @@
 # search-index
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/fable-community/search-index)
 
 ```sh
-deno task build
+npm run build
 ```
 
 ```ts
